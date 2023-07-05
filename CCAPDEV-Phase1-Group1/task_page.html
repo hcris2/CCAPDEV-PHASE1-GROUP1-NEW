@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Page</title>
+    <link rel="stylesheet" href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css>
+    <link rel="stylesheet" type="text/css" href="styles/task_page_styles.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html"><div class="logo">TASKMASTER</div></a>
+        <ul class="nav_buttons">
+            <a href="index.html"><li class="home"><i class="fa-solid fa-house fa-xs"></i>  HOME</li></a>
+            <a href="#" onclick="checkAuthentication(); redirectToTaskPage()"><li class="plan"><i class="fa-solid fa-calendar fa-xs"></i>PLAN</li></a>
+            <a href="task_page.html"><li class="plan"><i class="fa-solid fa-list-check"></i> TASKS</li></a>
+            <a href="#" id="logout_button" onclick="logout()"><li id="logout_button"> <i class="fa-solid fa-right-from-bracket"></i>LOGOUT</li></a>
+        </ul>
+    </nav>
+
+
+    <div class="container">
+        <div class="left_box"> 
+            <div class="header_text"> TASKS <span class="counter"></span> </div> <!-- TODO: change x depending on how many tasks are up-->
+            <button class="add_task"> + Add a task</button>
+
+            <div class="tasks" id="taskList">
+                <a href="#"> 
+                    <div class="task_entry">
+                        <div class="task_status"> <i class="fa-solid fa-bars-progress"></i> In Progress </div>
+                        <span class="line">| </span>
+                        <div class="task_name"> First Task  </div><span class="line">|</span>
+                        <div class="task_content"> Example of an Entry number 1 !!!</div> <span class="line">|</span>
+                        <div class="task_date">   <i class="fa-solid fa-calendar-days fa-sm" style="color: #1c4d19;"></i> June 20, 2023</div>  <span class="line">| </span>  
+                        <div class="task_priority"><i class="fa-solid fa-chart-simple fa-xs" style="color: #1c4d19;"></i> Low </div> <span class="line">| </span> 
+                        <div class="task_category"> <i class="fa-solid fa-user fa-sm"style="color: #1c4d19;"></i>Personal </div>
+                    </div>
+
+                    
+                    <div class="task_entry">
+                        <div class="task_status"> <i class="fa-solid fa-bars-progress"></i>Completed </div>   <span class="line"> |</span>
+                        <div class="task_name"> Second Task  </div> <span class="line">|</span>
+                        <div class="task_content"> This is my second task that is done</div> <span class="line">|</span>
+                        <div class="task_date"> <i class="fa-solid fa-calendar-days fa-sm" style="color: #1c4d19;"></i> June 21, 2023</div><span class="line">|</span> 
+                        <div class="task_priority"> <i class="fa-solid fa-chart-simple fa-xs" style="color: #1c4d19;"></i> Low </div> <span class="line">| </span> 
+                        <div class="task_category"><i class="fa-solid fa-user fa-sm"style="color: #1c4d19;"></i>Personal </div>
+                    </div>
+
+                    <div class="task_entry">
+                        <div class="task_status"><i class="fa-solid fa-bars-progress"></i> Completed </div>
+                        <span class="line">| </span>
+                        <div class="task_name"> Finish the laundry  </div><span class="line">|</span>
+                        <div class="task_content"> Wash my clothes before June 29</div> <span class="line">|</span>
+                        <div class="task_date"> <i class="fa-solid fa-calendar-days fa-sm" style="color: #1c4d19;"></i>   June 29, 2023</div>  <span class="line">| </span>  
+                        <div class="task_priority"> <i class="fa-solid fa-chart-simple fa-xs" style="color: #1c4d19;"></i> Low </div> <span class="line">| </span> 
+                        <div class="task_category"> <i class="fa-solid fa-user fa-sm"style="color: #1c4d19;"></i>Personal </div>
+                    </div>
+
+                    <div class="task_entry">
+                        <div class="task_status"><i class="fa-solid fa-bars-progress"></i> Not Started</div>
+                        <span class="line">| </span>
+                        <div class="task_name"> NSCOM01 MCO1  </div><span class="line">|</span>
+                        <div class="task_content">Work with partner for my MP</div> <span class="line">|</span>
+                        <div class="task_date"><i class="fa-solid fa-calendar-days fa-sm" style="color: #1c4d19;"></i>    July 6, 2023</div>  <span class="line">| </span>  
+                        <div class="task_priority"><i class="fa-solid fa-chart-simple fa-xs" style="color: #1c4d19;"></i> High </div> <span class="line">| </span> 
+                        <div class="task_category"><i class="fa-solid fa-user fa-sm"style="color: #1c4d19;"></i> Study </div>
+                    </div>
+
+                    <div class="task_entry">
+                        <div class="task_status"><i class="fa-solid fa-bars-progress"></i> In Progress </div>
+                        <span class="line">| </span>
+                        <div class="task_name"> Complete essay for a friend </div><span class="line">|</span>
+                        <div class="task_content"> Finish the essay about power and myths that my friend made me do</div> <span class="line">|</span>
+                        <div class="task_date">  <i class="fa-solid fa-calendar-days fa-sm" style="color: #1c4d19;"></i>  June 25, 2023</div>  <span class="line">| </span>  
+                        <div class="task_priority"> <i class="fa-solid fa-chart-simple fa-xs" style="color: #1c4d19;"></i> Medium </div> <span class="line">| </span> 
+                        <div class="task_category"><i class="fa-solid fa-user fa-sm"style="color: #1c4d19;"></i> Other </div>
+                    </div>
+
+                </a>
+            </div>
+        </div>
+
+        <div class="right_box">
+            <div class="header_text_2"> Current Task </div>
+            <div class="task_box_name" contenteditable="true"> </div>
+            <div class="task_box_content" contenteditable="true"></div>
+
+            <div class="right_bottom_box">
+                    <div class="status_text">
+                        <p>Status: </p>
+                            <select id="task_status_id">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                    </div> 
+                    
+
+                    <div class="date_text">
+                        <p>Due Date:</p>
+                        <input type="date" id="task_due_date" required>
+                        
+                    </div>
+
+                    <div class="priority_text"> 
+                        <p>Priority: </p>
+                        <select id="task_priority_id">
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    
+                    </div>
+
+                    <div class="type_text">
+                        <p>Task Type: </p>
+                        <select id="task_category_id">
+                            <option value="Personal">Personal</option>
+                            <option value="Work">Work</option>
+                            <option value="Study">Study</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+            </div>
+            
+            <div class="buttons">
+                <button class="delete_button">DELETE</button>  
+                <button class="save_button"> SAVE</button>
+            </div>
+
+
+        </div>
+
+
+    </div>
+    
+    <script>
+        function logout() {
+            localStorage.removeItem('loggedIn');
+            window.location.href = 'index.html';
+        }
+
+        function checkAuthentication() {
+            const isLoggedIn = localStorage.getItem('loggedIn');
+
+            if (isLoggedIn !== 'true') {
+                alert('Please log in to access the plan page.');
+                window.location.href = 'index.html';
+            }
+        }
+
+        function redirectToTaskPage() {
+            const isLoggedIn = localStorage.getItem('loggedIn');
+
+            if (isLoggedIn === 'true') {
+                window.location.href = 'plan.html';
+            } else {
+                alert('Please register and log in to access the task page.');
+            }
+        }
+    </script>
+    
+    <script src="javascript/task_page.js"></script>
+</body>
+</html>

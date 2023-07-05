@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskMaster - Home Page</title>
+    <link rel="stylesheet" href="styles/index_styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+  
+    <nav>
+        <div class="logo"><a href="#" class="logo-link">TASKMASTER</a></div>
+
+        <ul class="nav_buttons">
+            <a href="index.html"><li class="home"><i class="fa-solid fa-house fa-xs" aria-hidden="true" ></i> HOME</a></li>
+            <li class="plan"><a href="#" onclick="checkAuthentication(); redirectToPlanPage()"><i class="fa-solid fa-calendar fa-xs"></i> PLAN</a></li>
+            <a href="#"  onclick="checkAuthentication(); redirectToTaskPage()" ><li id="tasks_button"> <i class="fa-solid fa-list-check"></i> TASKS</li></a>
+            <li class="register"><a href="register.html#signup"> <i class="fa-solid fa-right-from-bracket"></i>REGISTER / LOG-IN</a></li>
+        </ul>
+    </nav>
+
+  
+    <div class="container">
+        <br>
+        <h1>Welcome to Taskmaster!</h1>
+        <h3>Easily organize and plan your schedule with our application!</h3>
+        <a href="register.html#signup"><button class="btn">REGISTER</button></a>
+        <a href="register.html"><button class="btn">LOG-IN</button></a>
+    </div>
+
+    <script>
+        function checkAuthentication() {
+            const isLoggedIn = localStorage.getItem('loggedIn');
+
+            if (isLoggedIn !== 'true') {
+                alert('Please log in to access the other pages.');
+                window.location.href = 'index.html';
+            }
+        }
+
+        function redirectToPlanPage() {
+            const isLoggedIn = localStorage.getItem('loggedIn');
+
+            if (isLoggedIn === 'true') {
+                window.location.href = 'plan.html';
+            } else {
+                alert('Please register and log in to access the plan page.');
+            }
+        }
+
+        function redirectToTaskPage() {
+            const isLoggedIn = localStorage.getItem('loggedIn');
+
+            if (isLoggedIn === 'true') {
+                window.location.href = 'task_page.html';
+            } else {
+                alert('Please register and log in to access the task page.');
+            }
+        }
+    </script>
+</body>
+</html>

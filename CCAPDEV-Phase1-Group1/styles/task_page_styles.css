@@ -1,0 +1,406 @@
+
+@import url(https://fonts.googleapis.com/css?family=Poppins:300);
+@import url('https://fonts.googleapis.com/css2?family=Merriweather&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap');
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  padding:auto;
+  margin:auto;
+}
+
+
+a {
+    text-decoration: none;
+    color: black;
+    transition: 0.5s ease;
+  }
+  
+
+body {
+    /*background-image: url("bg.png");*/
+    background-color:#FFF8D6;
+    overflow-y: scroll; /* Enable vertical scrolling */
+    padding-bottom: 20px; /* Add some padding at the bottom to prevent content from being cut off */
+    align-items: center;
+    font-family: 'Merriweather';
+  
+  }
+
+ 
+.logo{
+    font-family: "Oswald";
+    font-size:35px;
+    margin-right: 30%;
+    text-decoration: none;
+    transition:all 0.3s ease;
+  
+}
+
+
+nav{
+    /*position:fixed;*/
+    margin:auto;
+    width:auto;
+    padding:20px 10px; 
+    display:flex;
+    justify-content: space-evenly;
+    align-items: center;
+   /* transform: translateX(-50%);*/
+    border-bottom: 1px solid black;
+    background-color: #A4D0A4;
+}
+
+.logo{
+    transition:all 0.3s ease;
+    text-decoration: none;
+}
+
+.logo:hover{
+    color: #617A55;
+    transition: all 0.3s ease;
+}
+i{
+    margin-right: 5px;
+}
+nav ul{
+    display:flex;
+    align-items: center;
+}
+
+.nav_buttons{
+  list-style: none;
+  margin-bottom: 10px;
+}
+
+.nav_buttons a{
+    text-decoration: none;
+    color:black;
+}
+
+.nav_buttons a:active{
+    color:black;
+    
+}
+.nav_buttons a:visited{
+    color:black;
+    
+}
+.nav_buttons li {
+    display: inline-block;
+    font-size: 18px;
+    padding-top: 5px;
+    width: auto; /* Adjust the width as needed */
+    height: auto; /* Adjust the height as needed */
+    background: transparent;
+    border: none; /* Remove the border */
+    outline: none;
+    cursor: pointer;
+    color: black;
+    font-weight: bold;
+    margin-left: 50px;
+    text-align: center;
+    position: relative;
+}
+
+
+.nav_buttons li::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px; /* Adjust the distance from the word */
+    width: 100%;
+    height: 2px;
+    background-color: #617A55; /* Adjust the underline color as needed */
+    transform: scaleX(0);
+    transform-origin: bottom left;
+    transition: transform 0.3s ease-in-out;
+}
+
+.nav_buttons li:hover::after {
+    transform: scaleX(1);
+}
+
+
+.container{
+    margin:auto;
+    display:flex;
+    flex-direction: row;
+    vertical-align: top;
+    
+}
+
+.left_box{
+    width:1000px;
+    height:600px;
+    padding-top:40px;
+}
+
+.tasks{
+    padding:10px 0;
+    padding-right: 15px;
+    border-right: 2px solid black;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.header_text{
+    top:130px;
+    font-weight: bold;
+    font-family: "Oswald";
+    font-size: 40px;
+    display: flex-start;
+}
+
+.header_text_2{
+    padding-bottom:10px;
+    font-family: "Oswald";
+    font-size: 25px;
+    vertical-align: top;
+    align-content: flex-start;
+    text-align: left;
+    margin:1px;
+}
+
+
+.right_box{
+    display:flex;
+    justify-content: start;
+    flex-direction: column;
+    vertical-align: top;
+    text-align: left;
+    align-items: flex-start;
+    margin-top:50px;
+    border:4px solid #A4D0A4;
+    border-radius: 10px;
+    padding: 40px;
+}
+
+.task_box_name{
+    width:600px;
+    padding:5px;
+    border: 2px solid #A4D0A4;
+    background-color: rgba(251, 251, 251, 0.708);
+    border-radius: 10px;
+    height:auto;
+    display:flex;
+    align-items: flex-start;
+    font-family: "Oswald";
+    margin-bottom: 10px;
+    
+}
+
+.task_box_content{
+    width: 600px;
+    height:150px;
+    border: 2px solid #A4D0A4;
+    resize:vertical;
+    overflow:auto;
+    background-color: rgba(251, 251, 251, 0.708);
+    border-radius: 10px;
+    padding:5px;
+    display:flex;
+    align-items: flex-start;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.right_bottom_box{
+    font-family:"Oswald";
+    text-align: left;
+    display:flex;
+    flex-direction: row;
+    
+}
+
+.right_bottom_box div{
+    padding-inline: 10px;
+    padding-bottom: 20px;
+}
+
+
+.right_bottom_box select{
+    border-radius: 25px;
+    cursor:pointer;
+    height: 40px;
+    width: 120px;
+    padding: 10px;
+    align-items: stretch;
+    transition:all 0.3s ease;
+    border-color: 10px solid #A4D0A4;;
+
+    align-items: center;
+    text-align: center;
+}
+
+/* Style for the select element when an option is selected */
+select:focus {
+    background-color: white; /* Keep the background color white when an option is selected */
+  }
+  
+  option {
+    background-color: white; /* Set the background color of options */
+    color: black; /* Set the text color of options */
+  }
+
+
+.right_bottom_box select:hover, input:hover{
+
+    background-color: lightgreen;
+    cursor:pointer;
+}
+
+.right_bottom_box input{
+    border-radius: 25px;
+    cursor:pointer;
+    height: 40px;
+    width: 130px;
+    padding: 5px;
+    align-items: stretch;
+    transition:all 0.1s ease;
+    
+    align-items: center;
+    text-align: center;
+}
+
+.status_text {
+    flex: 1;
+    margin-left:auto;
+  }
+  
+  .task_details {
+    flex: 1;
+    text-align: end;
+  }
+  
+  .buttons {
+    flex: 0;
+  }
+
+.add_task{
+    width: calc(100% - 30px); /* Adjust the padding as needed */
+    height:40px;
+    margin-top:20px;
+    font-family: "Oswald";
+    font-size: large;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+
+.add_task:hover{
+    background-color: lightgreen;
+    transition: 0.3s;
+}
+
+.task_entry{
+    font-family: "Oswald";
+    display:flex;
+    flex-direction: row;
+    text-align: left;
+    align-items:normal;
+
+    border-bottom:1px solid black;
+    border-radius: 10px;
+    margin-bottom:10px;
+    padding:5px;
+
+}
+
+.task_entry.selected {
+    background-color: #bff3bf ;
+  }
+  
+
+.task_entry:hover{
+    transition:0.5s all ease;
+    background-color: #A4D0A4;
+}
+.task_entry{
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+
+}
+.task_status{
+    padding: 5px;
+}
+.task_name{
+    max-width: 200px;
+    padding: 10px;
+}
+.task_date {
+    padding:5px;
+}
+.task_content{
+    max-width: 200px;
+    overflow-x:hidden;
+    white-space:pre;
+    text-overflow:ellipsis;
+}
+.task_priority{
+    padding:10px;
+}
+.task_category{
+    padding:10px;
+}
+
+.task_right{
+    font-weight: bold;
+    font-family: "Oswald";
+    font-size: 25px;
+}
+
+.line{
+    padding-inline: 5px;
+}
+
+.type_text{
+    padding-bottom: 10px;
+}
+
+.delete_button {
+    border:1px solid gray;
+    background-color: rgb(255, 154, 154);
+    border-radius: 25px;
+    height: 45px;
+    width: 90px;
+    padding:10px;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s  ease;
+    font-weight: bold;
+    
+}
+
+.save_button{ 
+    border-radius: 25px;
+    height: 45px;
+    width: 90px;
+    padding:10px;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s  ease;
+    border:3px solid rgb(0, 183, 255);
+    border-color: rgb(0, 183, 255);
+    border-width: 10px;
+}
+
+.save_button{
+    color:white;
+    background-color: #a2cd8e;
+    font-weight: bold;
+    border:1px solid #A4D0A4;
+    cursor:pointer;
+}
+
+.save_button:hover{
+    background-color: #76a861;
+}
+
+.delete_button:hover{
+    background-color: rgb(255, 101, 101);
+    cursor:pointer;
+}

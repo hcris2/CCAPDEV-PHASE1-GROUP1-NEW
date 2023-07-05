@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TaskMaster - Task Management</title>
+  <link rel="stylesheet" type="text/css" href="styles/styles.css">
+  <link rel="stylesheet" href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css">
+</head>
+<body>
+  <nav>
+    <a href="index.html"><div class="logo">TASKMASTER</div></a>
+    <ul class="nav_buttons">
+      <a href="index.html"><li class="home"><i class="fa-solid fa-house fa-xs" aria-hidden="true" ></i>  HOME</li></a>
+      <li class="plan" onclick="redirectToTaskPage()"><i class="fa-solid fa-calendar fa-xs"></i>PLAN</li>
+      <a href="task_page.html"><li id="tasks_button"> <i class="fa-solid fa-list-check"></i> TASKS</li></a>
+      <a href="#" id="logout_button" onclick="logout()"><li id="logout_button"> <i class="fa-solid fa-right-from-bracket"></i>LOGOUT</li></a>
+    </ul>
+  </nav>
+
+  <div class="container">
+
+    <div class="left_bar">
+
+      <div id="task_div">
+        <h2>Create Task</h2>
+
+        <form id="task_form">
+          <input type="text" id="task_name" placeholder="Task Name" required>
+          <textarea id="task_details" placeholder="Task Details" required></textarea>
+          <input type="date" id="task_due_date" required>
+
+          <div class="custom-select">
+
+            <select id="task_priority">
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+
+            <select id="task_category">
+              <option value="Personal">Personal</option>
+              <option value="Work">Work</option>
+              <option value="Study">Study</option>
+              <option value="Other">Other</option>
+            </select>
+
+            <button type="submit" class="submit_task">Add Task</button>
+          </div>
+        </form>
+
+      </div>
+      
+      <div id="my_tasks">
+        <h2>My Tasks</h2>
+
+        <form id="search_form">
+          <input type="text" id="search_input" placeholder="Search tasks">
+          <button type="submit" class="search_button">Search</button>
+        </form>
+
+        <button id="view_all_button">View All Tasks</button>
+        
+
+        <div id="task_container">
+          <div id="task_list"></div>
+        </div>
+
+      </div>  
+    </div>
+      
+    <div id="calendar"></div>
+
+    <div class="right_bar">
+      <div class="task_categories">
+        <h2>Task Categories</h2>
+        <form id="category_form">
+          <input type="text" id="category_name" placeholder="Category Name" required>
+          <button type="submit" id="add_category_button">Add Category</button>
+        </form>
+        <div id="category_list"></div>
+      </div>
+
+      <div class="notifications">
+        <h2>Notifications</h2>
+        <form id="notification_form">
+          <input type="text" id="notification_title" placeholder="Notification Title" required>
+          <textarea id="notification_body" placeholder="Notification Body" required></textarea>
+          <input type="datetime-local" id="notification_date" required>
+          <button type="submit">Set Notification</button>
+        </form>
+        <div id="notification_list"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+  <script src="javascript/plan.js"></script>
+</body>
+</html>
