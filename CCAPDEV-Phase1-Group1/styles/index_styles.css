@@ -11,7 +11,7 @@ body{
     padding: 45px;
     flex-direction: column;  
     height:500px;
-    background-image: url("styles/bgtest.jpg");
+    background-image: url("bgtest.jpg");
     background-size:cover;
     background-repeat: no-repeat;
     background-position: center;
