@@ -30,12 +30,12 @@ function updateTaskCounter() {
     var newTaskEntry = document.createElement('div');
     newTaskEntry.className = 'task_entry';
     newTaskEntry.innerHTML = `
-      <div class="task_status">  Status </div><span class="line">| </span>
+      <div class="task_status"> <i class="fa-solid fa-bars-progress"></i> Status </div><span class="line">| </span>
       <div class="task_name">  Name  </div> <span class="line">|</span>
       <div class="task_content">  Content </div> <span class="line">|</span>
-      <div class="task_date">     Date</div>  <span class="line">| </span>  
-      <div class="task_priority">  Priority </div> <span class="line">| </span> 
-      <div class="task_category">  Category</div>
+      <div class="task_date">  <i class="fa-solid fa-calendar-days fa-sm"></i>   Date</div>  <span class="line">| </span>  
+      <div class="task_priority"><i class="fa-solid fa-chart-simple fa-xs"></i>  Priority </div> <span class="line">| </span> 
+      <div class="task_category"> <i class="fa-solid fa-user fa-sm"></i> Category</div>
     `;
     taskList.appendChild(newTaskEntry);
   
@@ -122,6 +122,7 @@ function updateTaskEntry() {
     var selectedTaskEntry = document.querySelector('.task_entry.selected'); // Get the selected task entry
     
     if (selectedTaskEntry) {
+      
       var taskNameElement = selectedTaskEntry.querySelector('.task_name');
       var taskContentElement = selectedTaskEntry.querySelector('.task_content');
       var taskStatusElement = selectedTaskEntry.querySelector('.task_status');
@@ -129,10 +130,21 @@ function updateTaskEntry() {
       var taskPriorityElement = selectedTaskEntry.querySelector('.task_priority');
       var taskCategoryElement = selectedTaskEntry.querySelector('.task_category');
         
+        // Preserve existing icon classes
+    var existingStatusIconClass = taskStatusElement.querySelector('i').className;
+    var existingPriorityIconClass = taskPriorityElement.querySelector('i').className;
+    var existingCategoryIconClass = taskCategoryElement.querySelector('i').className;
+
+        
       taskNameElement.textContent = taskBoxName.textContent;
       taskContentElement.textContent = taskBoxContent.textContent;
       taskStatusElement.textContent = taskBoxStatus;
       taskDateElement.textContent = convertToDateWorded(taskBoxDate);
+       // Restore existing icon classes
+    taskStatusElement.querySelector('i').className = existingStatusIconClass;
+    taskPriorityElement.querySelector('i').className = existingPriorityIconClass;
+    taskCategoryElement.querySelector('i').className = existingCategoryIconClass;
+
       taskPriorityElement.textContent = taskBoxPriority;
       taskCategoryElement.textContent = taskBoxCategory;  
 
