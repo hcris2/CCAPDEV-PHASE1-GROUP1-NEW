@@ -8,6 +8,8 @@ app.get('/',  (req,res) => {
     res.sendFile(indexPath);
 })
 
+
+
 // for INDEX.html 
 app.get('/index.html',  (req,res) => {
     const indexPath = path.join(__dirname, 'index.html');
