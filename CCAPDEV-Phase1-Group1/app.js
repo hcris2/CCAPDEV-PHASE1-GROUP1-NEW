@@ -1,8 +1,24 @@
 const express = require('express');
 const path = require('path');
+const mongoose = require('mongoose');
 
+/* -------------------------------------------------------------------------------------- */
 const app = express()
 
+mongoose.connect('mongodb://127.0.0.1/MCO1db')
+    .then(() => console.log('Connected to DB'))
+
+const User = require('./models/User.js')
+
+app.use(express.json())
+
+// adding a user, for registering?
+app.post('/api/users', async (req,res)=> {
+    const data = await User.create(req.body)
+    res.json(data);
+})
+
+/* -------------------------------------------------------------------------------------- */
 app.get('/',  (req,res) => {
     const indexPath = path.join(__dirname, 'index.html');
     res.sendFile(indexPath);
