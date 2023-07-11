@@ -130,35 +130,27 @@ function updateTaskEntry() {
       var taskPriorityElement = selectedTaskEntry.querySelector('.task_priority');
       var taskCategoryElement = selectedTaskEntry.querySelector('.task_category');
         
-        // Preserve existing icon classes
-    var existingStatusIconClass = taskStatusElement.querySelector('i').className;
-    var existingPriorityIconClass = taskPriorityElement.querySelector('i').className;
-    var existingCategoryIconClass = taskCategoryElement.querySelector('i').className;
-
+      
         
       taskNameElement.textContent = taskBoxName.textContent;
       taskContentElement.textContent = taskBoxContent.textContent;
       taskStatusElement.textContent = taskBoxStatus;
       taskDateElement.textContent = convertToDateWorded(taskBoxDate);
-       // Restore existing icon classes
-    taskStatusElement.querySelector('i').className = existingStatusIconClass;
-    taskPriorityElement.querySelector('i').className = existingPriorityIconClass;
-    taskCategoryElement.querySelector('i').className = existingCategoryIconClass;
-
       taskPriorityElement.textContent = taskBoxPriority;
-      taskCategoryElement.textContent = taskBoxCategory;  
-
+      taskCategoryElement.textContent = taskBoxCategory;
+      
       taskNameElement.style.color = "black";
       taskContentElement.style.color = "black";
       taskStatusElement.style.color = "black";
       taskDateElement.style.color = "black";
       taskPriorityElement.style.color = "black";
       taskCategoryElement.style.color = "black";
-
-      // Change the color of the lines to black
-    selectedTaskEntry.querySelectorAll('.line').forEach(function(line) {
+            
+        // Change the color of the lines to black
+      selectedTaskEntry.querySelectorAll('.line').forEach(function(line) {
         line.style.color = 'black';
       });
+
 
     }
 
