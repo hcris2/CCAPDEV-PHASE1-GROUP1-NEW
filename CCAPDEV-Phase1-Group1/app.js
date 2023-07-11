@@ -1,6 +1,10 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const MongoClient = require('mongodb').MongoClient;
+const mongoURL = 'mongodb+srv://dbUser:CCAPPDEV@cluster0.6n8rmdr.mongodb.net/'; // Replace with your MongoDB connection URL
+const dbName = 'CCAPDEV'; // Replace with your database name
+
 
 const server = http.createServer((req, res) => {
   console.log('Request url: ' + req.url);
