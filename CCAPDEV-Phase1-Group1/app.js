@@ -1,69 +1,83 @@
-const http = require('http');
-const fs = require('fs');
+const express = require('express');
 const path = require('path');
-const MongoClient = require('mongodb').MongoClient;
-const mongoURL = 'mongodb+srv://dbUser:CCAPPDEV@cluster0.6n8rmdr.mongodb.net/'; // Replace with your MongoDB connection URL
-const dbName = 'CCAPDEV'; // Replace with your database name
+
+const app = express()
+
+app.get('/',  (req,res) => {
+    const indexPath = path.join(__dirname, 'index.html');
+    res.sendFile(indexPath);
+})
+
+// for INDEX.html 
+app.get('/index.html',  (req,res) => {
+    const indexPath = path.join(__dirname, 'index.html');
+    res.sendFile(indexPath);
+})
+app.get('/styles/index_styles.css', (req, res) => {
+    const cssPath = path.join(__dirname, 'styles', 'index_styles.css');
+    res.sendFile(cssPath);
+  });
+  
+app.get('/styles/bgtest.jpg', (req, res) => {
+    const bgPath = path.join(__dirname, 'styles', 'bgtest.jpg');
+    res.sendFile(bgPath);
+  });
+
+app.get('/javascript/index.js',  (req,res) => {
+    const indexPath = path.join(__dirname, 'index.html');
+    res.sendFile(indexPath);
+})
+ // ^^ for index.html
+
+ // for REGISTER.html
+ app.get('/register.html',  (req,res) => {
+    const registerPath = path.join(__dirname, 'register.html');
+    res.sendFile(registerPath);
+})
+app.get('/styles/register_styles.css', (req, res) => {
+    const cssPath = path.join(__dirname, 'styles', 'register_styles.css');
+    res.sendFile(cssPath);
+  });
+
+app.get('/javascript/user.js',  (req,res) => {
+    const indexPath = path.join(__dirname, 'javascript', 'user.js');
+    res.sendFile(indexPath);
+})
+// ^^ for REGISTER.html
+
+//for PLAN.html
+app.get('/plan.html',  (req,res) => {
+    const planPath = path.join(__dirname, 'plan.html');
+    res.sendFile(planPath);
+})
+app.get('/styles/styles.css', (req, res) => {
+    const cssPath = path.join(__dirname, 'styles', 'styles.css');
+    res.sendFile(cssPath);
+  });
+
+app.get('/javascript/plan.js',  (req,res) => {
+    const indexPath = path.join(__dirname, 'javascript', 'plan.js');
+    res.sendFile(indexPath);
+})
+// ^^ for plan.html
+
+//for task_page.html
+app.get('/task_page.html',  (req,res) => {
+    const taskPath = path.join(__dirname, 'task_page.html');
+    res.sendFile(taskPath);
+})
+app.get('/styles/task_page_styles.css', (req, res) => {
+    const cssPath = path.join(__dirname, 'styles', 'task_page_styles.css');
+    res.sendFile(cssPath);
+  });
+
+app.get('/javascript/task_page.js',  (req,res) => {
+    const indexPath = path.join(__dirname, 'javascript', 'task_page.js');
+    res.sendFile(indexPath);
+})
+//^^ for task_page.html
 
 
-const server = http.createServer((req, res) => {
-  console.log('Request url: ' + req.url);
-
-  // Set the content type to HTML
-  res.setHeader('Content-Type', 'text/html');
-
-  // Serve different HTML files based on the request URL
-  if (req.url === '/register.html') {
-    // Read the register.html file
-    fs.readFile(path.join(__dirname, 'CCAPDEV-Phase1-Group1', 'index.html'), 'utf8', (err, data) => {
-      if (err) {
-        res.statusCode = 500;
-        res.end('Internal Server Error');
-        console.error('Error reading register.html:', err);
-      } else {
-        res.statusCode = 200;
-        res.end(data);
-      }
-    });
-  } else if (req.url === '/plan.html') {
-    // Read the plan.html file
-    fs.readFile(path.join(__dirname, 'plan.html'), 'utf8', (err, data) => {
-      if (err) {
-        res.statusCode = 500;
-        res.end('Internal Server Error');
-        console.error('Error reading plan.html:', err);
-      } else {
-        res.statusCode = 200;
-        res.end(data);
-      }
-    });
-  } else if (req.url === '/task_page.html') {
-    // Read the task_page.html file
-    fs.readFile(path.join(__dirname, 'task_page.html'), 'utf8', (err, data) => {
-      if (err) {
-        res.statusCode = 500;
-        res.end('Internal Server Error');
-        console.error('Error reading task_page.html:', err);
-      } else {
-        res.statusCode = 200;
-        res.end(data);
-      }
-    });
-  } else {
-    // Read the index.html file
-    fs.readFile(path.join(__dirname, 'index.html'), 'utf8', (err, data) => {
-      if (err) {
-        res.statusCode = 500;
-        res.end('Internal Server Error');
-        console.error('Error reading index.html:', err);
-      } else {
-        res.statusCode = 200;
-        res.end(data);
-      }
-    });
-  }
-});
-
-server.listen(3000, 'localhost', () => {
-  console.log('Server listening...');
-});
+app.listen(3000, () => {
+     console.log('Hello Listening at http://localhost:3000')
+})
