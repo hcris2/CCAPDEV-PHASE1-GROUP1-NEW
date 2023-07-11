@@ -11,7 +11,7 @@ const server = http.createServer((req, res) => {
   // Serve different HTML files based on the request URL
   if (req.url === '/register.html') {
     // Read the register.html file
-    fs.readFile(path.join(__dirname, 'register.html'), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'CCAPDEV-Phase1-Group1', 'index.html'), 'utf8', (err, data) => {
       if (err) {
         res.statusCode = 500;
         res.end('Internal Server Error');
