@@ -12,7 +12,7 @@ const User = require('./models/User.js')
 
 app.use(express.json())
 
-// adding a user, for registering?
+// adding a user, for registering; THIS WORKS BUT IDK HOW TO IMPLEMENT IT YHET SA REGISTER.HTML
 app.post('/api/users', async (req,res)=> {
     const data = await User.create(req.body)
     res.json(data);
