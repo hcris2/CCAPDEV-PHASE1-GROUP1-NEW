@@ -11,6 +11,7 @@ mongoose.connect('mongodb://127.0.0.1/MCO1db')
 const User = require('./models/User.js')
 
 app.use(express.json())
+app.use(express.urlencoded({extended:true}));
 
 // adding a user, for registering;
 app.post('/api/users', async (req, res) => {
@@ -30,14 +31,11 @@ app.post('/api/users', async (req, res) => {
       res.status(500).json({ error: 'An error occurred during user registration' });
     }
   });
-
 /* -------------------------------------------------------------------------------------- */
 app.get('/',  (req,res) => {
     const indexPath = path.join(__dirname, 'index.html');
     res.sendFile(indexPath);
 })
-
-
 
 // for INDEX.html 
 app.get('/index.html',  (req,res) => {
