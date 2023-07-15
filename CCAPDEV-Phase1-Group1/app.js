@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
+const bcrypt = require("bcryptjs");
 
 /* -------------------------------------------------------------------------------------- */
 const app = express()
@@ -11,6 +12,7 @@ mongoose.connect('mongodb://127.0.0.1/MCO1db')
 const User = require('./models/User.js')
 
 app.use(express.json())
+app.use(express.urlencoded({extended:false}))
 
 // adding a user, for registering;
 app.post('/api/users', async (req, res) => {
@@ -31,6 +33,24 @@ app.post('/api/users', async (req, res) => {
     }
   });
 
+  app.post('/api/login', async (req, res) => {
+
+   try{
+    const check = await User.collection.findOne({username:req.body.username})
+    if(check.password ===req.body.password){
+      res.render("plan.html");
+    }
+    else{
+      res.send("Invalid Credentials");
+    }
+   }catch{
+    res.send("Wrong details");
+
+
+   }
+});
+
+  
 /* -------------------------------------------------------------------------------------- */
 app.get('/',  (req,res) => {
     const indexPath = path.join(__dirname, 'index.html');

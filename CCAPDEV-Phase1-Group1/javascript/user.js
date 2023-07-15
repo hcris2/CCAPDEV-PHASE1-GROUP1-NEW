@@ -1,11 +1,11 @@
 $(document).ready(function() {
   // User registration logic
-  $('#signup_form').on('submit', function (event) {
+  $('#signup_form').on('submit', function(event) {
     event.preventDefault();
     const username = $('#signup_username').val();
     const password = $('#signup_password').val();
 
-    // Send a POST request to the server
+    // Send a POST request to the server for registration
     fetch('/api/users', {
       method: 'POST',
       headers: {
@@ -36,19 +36,27 @@ $(document).ready(function() {
     const username = $('#login_username').val();
     const password = $('#login_password').val();
 
-    // Retrieve the user data from local storage
-    const storedPassword = localStorage.getItem(username);
-
-    // Validate the entered password against the stored password
-    if (storedPassword && storedPassword === password) {
-      // Successful login
-      alert('Login successful');
-      localStorage.setItem('loggedIn', 'true'); // Set a flag to indicate the user is logged in
-      window.location.href = 'plan.html'; // Redirect to task.html after successful login
-    } else {
-      // Invalid login credentials
-      alert('Invalid login credentials');
-    }
+    // Send a POST request to the server for login
+    fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password }),
+    })
+      .then(response => {
+        if (response.ok) {
+          alert('Login successful');
+          localStorage.setItem('loggedIn', 'true'); // Set a flag to indicate the user is logged in
+          window.location.href = 'plan.html'; // Redirect to plan.html after successful login
+        } else {
+          alert('Invalid login credentials');
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        alert('An error occurred during login');
+      });
   });
 
   $('.tab a').on('click', function(e) {
@@ -69,6 +77,6 @@ $(document).ready(function() {
 
   // Check if the user is already logged in
   if (localStorage.getItem('loggedIn') === 'true') {
-    window.location.href = 'plan.html'; // Redirect to task.html if already logged in
+    window.location.href = 'plan.html'; // Redirect to plan.html if already logged in
   }
 });
