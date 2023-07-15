@@ -1,23 +1,33 @@
 $(document).ready(function() {
   // User registration logic
-  $('#signup_form').on('submit', function(event) {
+  $('#signup_form').on('submit', function (event) {
     event.preventDefault();
     const username = $('#signup_username').val();
     const password = $('#signup_password').val();
 
-    // Perform the registration logic, such as storing the user in the database or local storage
-    // Replace the following lines with your own registration logic
-
-    // Check if the user already exists in the database or local storage
-    if (localStorage.getItem(username)) {
-      alert('Username already exists. Please choose a different username.');
-    } else {
-      // Store the user data in local storage
-      localStorage.setItem(username, password);
-      alert('Registration successful');
-      $('.tab.active').removeClass('active');
-      $('#login').addClass('active'); // Switch to the "Log In" tab
-    }
+    // Send a POST request to the server
+    fetch('/api/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password }),
+    })
+      .then(response => {
+        if (response.ok) {
+          alert('Registration successful');
+          $('.tab.active').removeClass('active');
+          $('#login').addClass('active'); // Switch to the "Log In" tab
+        } else {
+          response.json().then(data => {
+            alert(data.error);
+          });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        alert('An error occurred during registration');
+      });
   });
 
   // User login logic

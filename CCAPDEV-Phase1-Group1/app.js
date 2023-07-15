@@ -13,17 +13,24 @@ const User = require('./models/User.js')
 app.use(express.json())
 app.use(express.urlencoded({extended:true}));
 
-// adding a user, for registering; THIS WORKS BUT IDK HOW TO IMPLEMENT IT YHET SA REGISTER.HTML
-app.post('/api/users', async (req,res)=> {
-    try{
-    const user = new User.create(req.body);
-    await user.save();
-    res.json(user);
-    }catch(error){
-        console.error(error);
-        res.status(500).json({error:'Error creating user'});
+// adding a user, for registering;
+app.post('/api/users', async (req, res) => {
+    try {
+      const { username, password } = req.body;
+  
+      // Check if the username already exists
+      const existingUser = await User.findOne({ username });
+      if (existingUser) {
+        return res.status(409).json({ error: 'Username already exists. Please choose a different username.' });
+      }
+  
+      const newUser = new User({ username, password });
+      await newUser.save();
+      res.json(newUser);
+    } catch (error) {
+      res.status(500).json({ error: 'An error occurred during user registration' });
     }
-})
+  });
 /* -------------------------------------------------------------------------------------- */
 app.get('/',  (req,res) => {
     const indexPath = path.join(__dirname, 'index.html');
@@ -63,6 +70,11 @@ app.get('/styles/register_styles.css', (req, res) => {
 
 app.get('/javascript/user.js',  (req,res) => {
     const indexPath = path.join(__dirname, 'javascript', 'user.js');
+    res.sendFile(indexPath);
+})
+
+app.get('/models/User.js',  (req,res) => {
+    const indexPath = path.join(__dirname, 'models', 'User.js');
     res.sendFile(indexPath);
 })
 // ^^ for REGISTER.html
