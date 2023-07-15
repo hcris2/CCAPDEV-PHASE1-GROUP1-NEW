@@ -11,18 +11,11 @@ mongoose.connect('mongodb://127.0.0.1/MCO1db')
 const User = require('./models/User.js')
 
 app.use(express.json())
-app.use(express.urlencoded({extended:true}));
 
 // adding a user, for registering; THIS WORKS BUT IDK HOW TO IMPLEMENT IT YHET SA REGISTER.HTML
-app.post('/api/register', async (req,res)=> {
-    try{
-    const user = new User.create(req.body);
-    await user.save();
-    res.json(user);
-    }catch(error){
-        console.error(error);
-        res.status(500).json({error:'Error creating user'});
-    }
+app.post('/api/users', async (req,res)=> {
+    const data = await User.create(req.body)
+    res.json(data);
 })
 
 /* -------------------------------------------------------------------------------------- */
@@ -30,6 +23,8 @@ app.get('/',  (req,res) => {
     const indexPath = path.join(__dirname, 'index.html');
     res.sendFile(indexPath);
 })
+
+
 
 // for INDEX.html 
 app.get('/index.html',  (req,res) => {
