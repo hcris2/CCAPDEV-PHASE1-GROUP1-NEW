@@ -14,7 +14,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}));
 
 // adding a user, for registering; THIS WORKS BUT IDK HOW TO IMPLEMENT IT YHET SA REGISTER.HTML
-app.post('/api/register', async (req,res)=> {
+app.post('/api/users', async (req,res)=> {
     try{
     const user = new User.create(req.body);
     await user.save();
@@ -24,7 +24,6 @@ app.post('/api/register', async (req,res)=> {
         res.status(500).json({error:'Error creating user'});
     }
 })
-
 /* -------------------------------------------------------------------------------------- */
 app.get('/',  (req,res) => {
     const indexPath = path.join(__dirname, 'index.html');
