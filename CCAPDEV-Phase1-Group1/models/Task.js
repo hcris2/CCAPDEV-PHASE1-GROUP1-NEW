@@ -1,32 +1,33 @@
+const express = require('express');
+const router = express.Router();
 const mongoose = require('mongoose');
 
 const taskSchema = new mongoose.Schema({
-  status: {
+  task_status: {
     type: String,
     required: true
   },
-  name: {
+  task_name: {
     type: String,
     required: true
   },
-  content: {
+  task_content: {
     type: String,
     required: true
   },
-  date: {
+  task_date: {
     type: String,
     required: true
   },
-  priority: {
+  task_priority: {
     type: String,
     required: true
   },
-  category: {
+  task_category: {
     type: String,
     required: true
   }
 });
 
 const Task = mongoose.model('Task', taskSchema);
-
 module.exports = Task;
