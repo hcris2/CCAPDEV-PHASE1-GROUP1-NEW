@@ -5,11 +5,14 @@ const bcrypt = require("bcryptjs");
 
 /* -------------------------------------------------------------------------------------- */
 const app = express()
+const router = express.Router();
+
 
 mongoose.connect('mongodb://127.0.0.1/MCO1db')
     .then(() => console.log('Connected to DB'))
 
 const User = require('./models/User.js')
+const Task = require('../models/Task.js');
 
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
@@ -50,7 +53,33 @@ app.post('/api/users', async (req, res) => {
    }
 });
 
-  
+router.post('/tasks', async (req, res) => {
+  try {
+    // Extract the task data from the request body
+    const { status, name, content, date, priority, category } = req.body;
+
+    // Create a new task document
+    const task = new Task({
+      status,
+      name,
+      content,
+      date,
+      priority,
+      category
+    });
+
+    // Save the task to the database
+    await task.save();
+
+    res.status(201).json(task); // Return the created task as the API response
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while adding the task' });
+  }
+});
+
+module.exports = router;
+
+
 /* -------------------------------------------------------------------------------------- */
 app.get('/',  (req,res) => {
     const indexPath = path.join(__dirname, 'index.html');

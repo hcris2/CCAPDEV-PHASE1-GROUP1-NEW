@@ -39,17 +39,41 @@ function updateTaskCounter() {
     `;
     taskList.appendChild(newTaskEntry);
   
-    // Add click event listener to the newly added task entry
-    newTaskEntry.addEventListener('click', function(event) {
-      displayTask(event.currentTarget);
-    });
-  
-    // Add pointer cursor style to the new task entry
-    newTaskEntry.style.color = 'gray';
-    newTaskEntry.style.cursor = "pointer";
     // Update the task counter
     updateTaskCounter();
+  
+    // Prepare the task data to send to the server
+    var taskData = {
+      status: 'Status',
+      name: 'Name',
+      content: 'Content',
+      date: 'Date',
+      priority: 'Priority',
+      category: 'Category'
+    };
+  
+    // Send a POST request to the server with the task data
+    fetch('/api/tasks', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(taskData),
+    })
+      .then(response => {
+        if (response.ok) {
+          // Success response from the server
+          console.log('Task added successfully');
+        } else {
+          // Error response from the server
+          console.error('Failed to add task');
+        }
+      })
+      .catch(error => {
+        console.error('An error occurred while adding the task:', error);
+      });
   }
+  
 
 
 function displayTask(taskEntry) {
