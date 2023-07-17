@@ -26,63 +26,64 @@ document.addEventListener('DOMContentLoaded', function() {
     taskCounter.textContent = '(' + taskCount + ')';
   }
   
-function addTaskEntry() {
-  var taskList = document.getElementById('taskList');
-  var newTaskEntry = document.createElement('div');
-  newTaskEntry.className = 'task_entry';
-  newTaskEntry.innerHTML = `
-    <div class="task_status"> <i class="fa-solid fa-bars-progress"></i> Status </div><span class="line">| </span>
-    <div class="task_name" contenteditable="true">  Name  </div> <span class="line">|</span>
-    <div class="task_content" contenteditable="true">  Content </div> <span class="line">|</span>
-    <div class="task_date">  <i class="fa-solid fa-calendar-days fa-sm"></i>   Date</div>  <span class="line">| </span>  
-    <div class="task_priority"><i class="fa-solid fa-chart-simple fa-xs"></i>  Priority </div> <span class="line">| </span> 
-    <div class="task_category"> <i class="fa-solid fa-user fa-sm"></i> Category</div>
-  `;
-  taskList.appendChild(newTaskEntry);
-
-  // Update the task counter
-  updateTaskCounter();
-
-  // Get the input values from the task entry fields
-  var taskStatus = ('.task_status'); // Set a default value for task status
-  var taskName = newTaskEntry.querySelector('.task_name').textContent.trim();
-  var taskContent = newTaskEntry.querySelector('.task_content').textContent.trim();
-  var taskDate = newTaskEntry.querySelector('.task_date').textContent.trim();
-  var taskPriority = newTaskEntry.querySelector('.task_priority').textContent.trim();
-  var taskCategory = newTaskEntry.querySelector('.task_category').textContent.trim();
-
-  // Prepare the task data to send to the server
-  var taskData = {
-    task_status: taskStatus,
-    task_name: taskName,
-    task_content: taskContent,
-    task_date: taskDate,
-    task_priority: taskPriority,
-    task_category: taskCategory
-  };
-
-  // Send a POST request to the server with the task data
-  fetch('/tasks', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(taskData),
-  })
-    .then(response => {
-      if (response.ok) {
-        // Success response from the server
-        console.log('Task added successfully');
-      } else {
-        // Error response from the server
-        console.error('Failed to add task');
-      }
+  function addTaskEntry() {
+    var taskList = document.getElementById('taskList');
+    var newTaskEntry = document.createElement('div');
+    newTaskEntry.className = 'task_entry';
+    newTaskEntry.innerHTML = `
+      <div class="task_status"> <i class="fa-solid fa-bars-progress"></i> Status </div><span class="line">| </span>
+      <div class="task_name" contenteditable="true">  Name  </div> <span class="line">|</span>
+      <div class="task_content" contenteditable="true">  Content </div> <span class="line">|</span>
+      <div class="task_date">  <i class="fa-solid fa-calendar-days fa-sm"></i>   Date</div>  <span class="line">| </span>  
+      <div class="task_priority"><i class="fa-solid fa-chart-simple fa-xs"></i>  Priority </div> <span class="line">| </span> 
+      <div class="task_category"> <i class="fa-solid fa-user fa-sm"></i> Category</div>
+    `;
+    taskList.appendChild(newTaskEntry);
+  
+    // Update the task counter
+    updateTaskCounter();
+  
+    // Get the input values from the task entry fields
+    var taskStatus = newTaskEntry.querySelector('.task_status').innerText.trim();
+    var taskName = newTaskEntry.querySelector('.task_name').innerText.trim();
+    var taskContent = newTaskEntry.querySelector('.task_content').innerText.trim();
+    var taskDate = newTaskEntry.querySelector('.task_date').innerText.trim();
+    var taskPriority = newTaskEntry.querySelector('.task_priority').innerText.trim();
+    var taskCategory = newTaskEntry.querySelector('.task_category').innerText.trim();
+  
+    // Prepare the task data to send to the server
+    var taskData = {
+      task_status: taskStatus,
+      task_name: taskName,
+      task_content: taskContent,
+      task_date: taskDate,
+      task_priority: taskPriority,
+      task_category: taskCategory
+    };
+  
+    // Send a POST request to the server with the task data
+    fetch('/api/tasks', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(taskData),
     })
-    .catch(error => {
-      console.error('An error occurred while adding the task:', error);
-    });
-}
-
+      .then(response => {
+        if (response.ok) {
+          // Success response from the server
+          console.log('Task added successfully');
+        } else {
+          // Error response from the server
+          console.error('Failed to add task');
+        }
+      })
+      .catch(error => {
+        console.error('An error occurred while adding the task:', error);
+      });
+  }
+  
+  
 function displayTask(taskEntry) {
     var taskEntries = document.querySelectorAll('.task_entry');
   

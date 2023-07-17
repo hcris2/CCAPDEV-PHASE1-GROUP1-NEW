@@ -52,7 +52,7 @@ app.post('/api/users', async (req, res) => {
 
    }
 });
-app.post('/tasks', async (req, res) => {
+app.post('/api/tasks', async (req, res) => {
   try {
     // Extract the task data from the request body
     const { task_status, task_name, task_content, task_date, task_priority, task_category } = req.body;
