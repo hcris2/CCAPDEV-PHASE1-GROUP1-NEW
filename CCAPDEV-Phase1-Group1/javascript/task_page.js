@@ -26,9 +26,9 @@ function updateTaskCounter() {
   taskCounter.textContent = '(' + taskCount + ')';
 }
 
+//----------------------------------------EDIT ZONE--------------------------------------------------------
 
-//-----------------------------------------edit zone------------------------------------------------------
-
+// Function to add a task entry
 function addTaskEntry() {
   var taskList = document.getElementById('taskList');
   var newTaskEntry = document.createElement('div');
@@ -47,8 +47,34 @@ function addTaskEntry() {
   updateTaskCounter();
 }
 
-var saveButton = document.querySelector('.save_button');
-saveButton.addEventListener('click', function() {
+// Function to load existing tasks from the server
+function loadTasks() {
+  fetch('/tasks', {
+    method: 'GET',
+  })
+  .then(response => response.json())
+  .then(tasks => {
+    tasks.forEach(task => {
+      // For each task, create an entry in the task list
+      addTaskEntry(task);
+    });
+  })
+  .catch(error => {
+    console.error('An error occurred while loading the tasks:', error);
+  });
+}
+
+// Call loadTasks when the page loads
+window.addEventListener('DOMContentLoaded', (event) => {
+  loadTasks();
+
+  // Add a click event to the save button
+  var saveButton = document.querySelector('.save_button');
+  saveButton.addEventListener('click', saveTasks);
+});
+
+// Function to save tasks when the save button is clicked
+function saveTasks() {
   var taskEntries = document.querySelectorAll('.task_entry');
   taskEntries.forEach(function(taskEntry) {
     var taskStatus = taskEntry.querySelector('.task_status').textContent.trim();
@@ -67,8 +93,16 @@ saveButton.addEventListener('click', function() {
       task_category: taskCategory
     };
 
-    fetch('/tasks', {
-      method: 'POST',
+    var requestUrl = '/tasks';
+    var requestMethod = 'POST';
+
+    if (taskEntry.getAttribute('data-id')) {
+      requestUrl += '/' + taskEntry.getAttribute('data-id');
+      requestMethod = 'PUT';
+    }
+
+    fetch(requestUrl, {
+      method: requestMethod,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -76,19 +110,19 @@ saveButton.addEventListener('click', function() {
     })
     .then(response => {
       if (response.ok) {
-        console.log('Task added successfully');
+        console.log('Task added/updated successfully');
       } else {
-        console.error('Failed to add task');
+        console.error('Failed to add/update task');
       }
     })
     .catch(error => {
-      console.error('An error occurred while adding the task:', error);
+      console.error('An error occurred while adding/updating the task:', error);
     });
   });
-});
+}
 
-//-----------------------------------------edit zone------------------------------------------------------
 
+//----------------------------------------EDIT ZONE--------------------------------------------------------
 function displayTask(taskEntry) {
   var taskEntries = document.querySelectorAll('.task_entry');
 
