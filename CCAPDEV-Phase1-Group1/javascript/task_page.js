@@ -123,6 +123,7 @@ function saveTasks() {
 
 
 //----------------------------------------EDIT ZONE--------------------------------------------------------
+
 function displayTask(taskEntry) {
   var taskEntries = document.querySelectorAll('.task_entry');
 
