@@ -16,9 +16,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
   var deleteButton = document.querySelector('.delete_button');
   deleteButton.addEventListener('click', deleteTaskEntry);
-
+  
+  loadTasks();
   updateTaskCounter();
 });
+
 
 function updateTaskCounter() {
   var taskCount = document.querySelectorAll('.task_entry').length;
@@ -26,104 +28,109 @@ function updateTaskCounter() {
   taskCounter.textContent = '(' + taskCount + ')';
 }
 
-//----------------------------------------EDIT ZONE--------------------------------------------------------
+// Function to load tasks from the server and display them
+async function loadTasks() {
+  const taskList = document.getElementById('taskList');
 
-// Function to add a task entry
+  try {
+    // Fetch tasks from the server
+    const response = await fetch('/api/tasks');
+    const tasks = await response.json();
+
+    // Create task entries and add them to the taskList
+    tasks.forEach((task) => {
+      const newTaskEntry = document.createElement('div');
+      newTaskEntry.className = 'task_entry';
+      newTaskEntry.setAttribute('data-task-id', task._id); // Set the _id as a custom attribute
+      newTaskEntry.innerHTML = `
+        <div class="task_status"> <i class="fa-solid fa-bars-progress"></i> ${task.task_status} </div><span class="line">| </span>
+        <div class="task_name">  ${task.task_name}  </div> <span class="line">|</span>
+        <div class="task_content">  ${task.task_content} </div> <span class="line">|</span>
+        <div class="task_date">  <i class="fa-solid fa-calendar-days fa-sm"></i> ${convertToDateWorded(task.task_date)}</div>  <span class="line">| </span>  
+        <div class="task_priority"><i class="fa-solid fa-chart-simple fa-xs"></i> ${task.task_priority} </div> <span class="line">| </span> 
+        <div class="task_category"> <i class="fa-solid fa-user fa-sm"></i> ${task.task_category}</div>
+      `;
+      newTaskEntry.style.hover = "cursor: pointer";
+      
+      taskList.appendChild(newTaskEntry);
+    });
+
+    updateTaskCounter();
+  } catch (error) {
+    console.error('An error occurred while fetching tasks:', error);
+  }
+}
+
 function addTaskEntry() {
   var taskList = document.getElementById('taskList');
   var newTaskEntry = document.createElement('div');
   newTaskEntry.className = 'task_entry';
   newTaskEntry.innerHTML = `
-    <div class="task_status" contenteditable="true"> <i class="fa-solid fa-bars-progress"></i> Status </div><span class="line">| </span>
-    <div class="task_name" contenteditable="true">  Name  </div> <span class="line">|</span>
-    <div class="task_content" contenteditable="true">  Content </div> <span class="line">|</span>
-    <div class="task_date" contenteditable="true">  <i class="fa-solid fa-calendar-days fa-sm"></i>   Date</div>  <span class="line">| </span>  
-    <div class="task_priority" contenteditable="true"><i class="fa-solid fa-chart-simple fa-xs"></i>  Priority </div> <span class="line">| </span> 
-    <div class="task_category" contenteditable="true"> <i class="fa-solid fa-user fa-sm"></i> Category</div>
+    <div class="task_status"> <i class="fa-solid fa-bars-progress"></i> Status </div><span class="line">| </span>
+    <div class="task_name">  Name  </div> <span class="line">|</span>
+    <div class="task_content">  Content </div> <span class="line">|</span>
+    <div class="task_date">  <i class="fa-solid fa-calendar-days fa-sm"></i>   January 1, 1969 </div>  <span class="line">| </span>  
+    <div class="task_priority"><i class="fa-solid fa-chart-simple fa-xs"></i>  Priority </div> <span class="line">| </span> 
+    <div class="task_category"> <i class="fa-solid fa-user fa-sm"></i> Category</div>
   `;
   taskList.appendChild(newTaskEntry);
 
+  // Add click event listener to the newly added task entry
+  newTaskEntry.addEventListener('click', function(event) {
+    displayTask(event.currentTarget);
+  });
+
+  // Add pointer cursor style to the new task entry
+  newTaskEntry.style.color = 'gray';
+  newTaskEntry.style.cursor = "pointer";
   // Update the task counter
   updateTaskCounter();
-}
 
-// Function to load existing tasks from the server
-function loadTasks() {
-  fetch('/api/tasks', {
-    method: 'GET',
-  })
-  .then(response => response.json())
-  .then(tasks => {
-    tasks.forEach(task => {
-      // For each task, create an entry in the task list
-      addTaskEntry(task);
+   // Extract the task details from the new task entry
+   var taskStatus = "Status"; 
+   var taskName = "Name"; 
+   var taskContent = "Content"; 
+   var taskDate = "1969-01-01";
+   var taskPriority = "Priority"; 
+   var taskCategory = "Category"; 
+ 
+   // Create a JSON object with the task details
+   const newTask = {
+     task_status: taskStatus,
+     task_name: taskName,
+     task_content: taskContent,
+     task_date: taskDate,
+     task_priority: taskPriority,
+     task_category: taskCategory,
+   };
+ 
+   // Send a POST request to your server to add the task to the database
+   fetch('/api/tasks', {
+     method: 'POST',
+     headers: {
+       'Content-Type': 'application/json',
+     },
+     body: JSON.stringify(newTask),
+   })
+   .then((response) => response.json())
+   .then((data) => {
+    //TODO: look into this comment more
+     // The task has been added to the database successfully
+     // You can update the newTaskEntry's content with the returned data, if necessary.
+     // For example, you can update the task ID or other properties that might have been generated on the server.
+     // You can access the returned data from the server in the 'data' variable.
+     // Update the newTaskEntry's content if needed based on the response data.
+     newTaskEntry.setAttribute('data-task-id', data._id);
+   })
+   .catch((error) => {
+     // Handle any errors that occurred during the POST request
+     console.error('An error occurred while adding the task:', error);
+     // If there's an error, you might want to remove the newTaskEntry to keep the frontend and backend in sync.
+     newTaskEntry.remove();
     });
-  })
-  .catch(error => {
-    console.error('An error occurred while loading the tasks:', error);
-  });
+
 }
 
-// Call loadTasks when the page loads
-window.addEventListener('DOMContentLoaded', (event) => {
-  loadTasks();
-
-  // Add a click event to the save button
-  var saveButton = document.querySelector('.save_button');
-  saveButton.addEventListener('click', saveTasks);
-});
-
-// Function to save tasks when the save button is clicked
-function saveTasks() {
-  var taskEntries = document.querySelectorAll('.task_entry');
-  taskEntries.forEach(function (taskEntry) {
-    var taskStatus = taskEntry.querySelector('.task_status').textContent.trim();
-    var taskName = taskEntry.querySelector('.task_name').textContent.trim();
-    var taskContent = taskEntry.querySelector('.task_content').textContent.trim();
-    var taskDate = taskEntry.querySelector('.task_date').textContent.trim();
-    var taskPriority = taskEntry.querySelector('.task_priority').textContent.trim();
-    var taskCategory = taskEntry.querySelector('.task_category').textContent.trim();
-    var taskId = taskEntry.getAttribute('data-id'); // Get the unique identifier
-
-    var taskData = {
-      task_status: taskStatus,
-      task_name: taskName,
-      task_content: taskContent,
-      task_date: taskDate,
-      task_priority: taskPriority,
-      task_category: taskCategory
-    };
-
-    var requestUrl = '/api/tasks';
-    var requestMethod = 'POST';
-
-    if (taskId) {
-      requestUrl += '/' + taskId; // If the task already has an id, it means it exists in the backend, so we send a PUT request to update it.
-      requestMethod = 'PUT';
-    }
-
-    fetch(requestUrl, {
-      method: requestMethod,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(taskData),
-    })
-      .then(response => {
-        if (response.ok) {
-          console.log('Task added/updated successfully');
-        } else {
-          console.error('Failed to add/update task');
-        }
-      })
-      .catch(error => {
-        console.error('An error occurred while adding/updating the task:', error);
-      });
-  });
-}
-
-
-//----------------------------------------EDIT ZONE--------------------------------------------------------
 
 function displayTask(taskEntry) {
   var taskEntries = document.querySelectorAll('.task_entry');
@@ -156,31 +163,52 @@ function displayTask(taskEntry) {
   taskBoxDate.value = taskDate;
   taskBoxPriority.value = taskPriority;
   taskBoxCategory.value = taskCategory;
+  
 }
 
 function deleteTaskEntry() {
   var selectedTaskEntry = document.querySelector('.task_entry.selected');
   
   if (selectedTaskEntry) {
-    selectedTaskEntry.remove();
+    var taskId = selectedTaskEntry.getAttribute("data-task-id");
 
-    // Clear the right box
-    var taskBoxName = document.querySelector('.task_box_name');
-    var taskBoxContent = document.querySelector('.task_box_content');
-    var taskBoxStatus = document.querySelector('#task_status_id');
-    var taskBoxDate = document.querySelector('#task_due_date');
-    var taskBoxPriority = document.querySelector('#task_priority_id');
-    var taskBoxCategory = document.querySelector('#task_category_id');
+    // Send the DELETE request to your server to remove the task from the database
+    fetch(`/api/tasks/${taskId}`, {
+      method: 'DELETE',
+    })
+    .then((response) => {
+      if (response.ok) {
+        // Task successfully deleted from the database
+        selectedTaskEntry.remove(); // Remove the task entry from the DOM
+        // Clear the right box if needed
+        var taskBoxName = document.querySelector('.task_box_name');
+        var taskBoxContent = document.querySelector('.task_box_content');
+        var taskBoxStatus = document.querySelector('#task_status_id');
+        var taskBoxDate = document.querySelector('#task_due_date');
+        var taskBoxPriority = document.querySelector('#task_priority_id');
+        var taskBoxCategory = document.querySelector('#task_category_id');
 
-    taskBoxName.textContent = '';
-    taskBoxContent.textContent = '';
-    taskBoxStatus.value = '';
-    taskBoxDate.value = '';
-    taskBoxPriority.value = '';
-    taskBoxCategory.value = '';
+        taskBoxName.textContent = '';
+        taskBoxContent.textContent = '';
+        taskBoxStatus.value = '';
+        taskBoxDate.value = '';
+        taskBoxPriority.value = '';
+        taskBoxCategory.value = '';
 
-    // Update the task counter
-    updateTaskCounter();
+        // Update the task counter
+        
+        // Handle the response from the server if needed
+        console.log('Task deleted:', response);
+        updateTaskCounter();
+      } else {
+        console.error('Failed to delete the task.');
+      }
+    })
+    .catch((error) => {
+      console.error('Error while deleting the task:', error);
+    });
+  } else {
+    console.error('No task selected to delete.');
   }
 }
 
@@ -193,39 +221,63 @@ function updateTaskEntry() {
   var taskBoxCategory = document.querySelector('#task_category_id').value;
 
   var selectedTaskEntry = document.querySelector('.task_entry.selected'); // Get the selected task entry
-  
+
   if (selectedTaskEntry) {
-    
-    var taskNameElement = selectedTaskEntry.querySelector('.task_name');
-    var taskContentElement = selectedTaskEntry.querySelector('.task_content');
-    var taskStatusElement = selectedTaskEntry.querySelector('.task_status');
-    var taskDateElement = selectedTaskEntry.querySelector('.task_date');  
-    var taskPriorityElement = selectedTaskEntry.querySelector('.task_priority');
-    var taskCategoryElement = selectedTaskEntry.querySelector('.task_category');
-      
-    taskNameElement.textContent = taskBoxName.textContent;
-    taskContentElement.textContent = taskBoxContent.textContent;
-    taskStatusElement.textContent = taskBoxStatus;
-    taskDateElement.textContent = convertToDateWorded(taskBoxDate);
-    taskPriorityElement.textContent = taskBoxPriority;
-    taskCategoryElement.textContent = taskBoxCategory;
-    
-    taskNameElement.style.color = "black";
-    taskContentElement.style.color = "black";
-    taskStatusElement.style.color = "black";
-    taskDateElement.style.color = "black";
-    taskPriorityElement.style.color = "black";
-    taskCategoryElement.style.color = "black";
-          
-      // Change the color of the lines to black
-    selectedTaskEntry.querySelectorAll('.line').forEach(function(line) {
-      line.style.color = 'black';
+    var taskId = selectedTaskEntry.getAttribute("data-task-id");
+
+    // Extract the icons from the existing task entry
+    var taskStatusIcon = selectedTaskEntry.querySelector('.fa-bars-progress');
+    var taskDateIcon = selectedTaskEntry.querySelector('.fa-calendar-days');
+    var taskPriorityIcon = selectedTaskEntry.querySelector('.fa-chart-simple');
+    var taskCategoryIcon = selectedTaskEntry.querySelector('.fa-user');
+
+    // Update the specific text content of the task entry
+    selectedTaskEntry.querySelector('.task_name').textContent = taskBoxName.textContent;
+    selectedTaskEntry.querySelector('.task_content').textContent = taskBoxContent.textContent;
+    selectedTaskEntry.querySelector('.task_status').textContent = taskBoxStatus;
+    selectedTaskEntry.querySelector('.task_date').textContent = convertToDateWorded(taskBoxDate);
+    selectedTaskEntry.querySelector('.task_priority').textContent = taskBoxPriority;
+    selectedTaskEntry.querySelector('.task_category').textContent = taskBoxCategory;
+
+    // Re-insert the icons into the task entry
+    selectedTaskEntry.querySelector('.task_status').prepend(taskStatusIcon);
+    selectedTaskEntry.querySelector('.task_date').prepend(taskDateIcon);
+    selectedTaskEntry.querySelector('.task_priority').prepend(taskPriorityIcon);
+    selectedTaskEntry.querySelector('.task_category').prepend(taskCategoryIcon);
+
+    selectedTaskEntry.style.color = 'black';
+    // Send the updated task data to the server using fetch API
+    var updatedTask = {
+      task_name: taskBoxName.textContent,
+      task_content: taskBoxContent.textContent,
+      task_status: taskBoxStatus,
+      task_date: taskBoxDate,
+      task_priority: taskBoxPriority,
+      task_category: taskBoxCategory
+    };
+
+    fetch(`/api/tasks/${taskId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedTask),
+    })
+    .then((response) => response.json())
+    .then((updatedTask) => {
+      // Handle the response from the server if needed
+      console.log('Task updated:', updatedTask);
+      // You can update the UI here or show a success message if required
+    })
+    .catch((error) => {
+      console.error('Error updating task:', error);
     });
-
-
+  } else {
+    console.error('No task selected to update.');
   }
-
 }
+
+
 
 function convertToDateWorded(dateValue) {
   // Create a Date object using the input value

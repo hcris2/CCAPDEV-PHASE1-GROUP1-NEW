@@ -318,6 +318,7 @@ select:focus {
 .task_entry:hover{
     transition:0.5s all ease;
     background-color: #A4D0A4;
+    cursor:pointer;
 }
 .task_entry{
     overflow-x: hidden;

@@ -36,7 +36,8 @@ app.post('/api/users', async (req, res) => {
     }
   });
 
-  app.post('/api/login', async (req, res) => {
+  // for logging in
+app.post('/api/login', async (req, res) => {
 
    try{
     const check = await User.collection.findOne({username:req.body.username})
@@ -52,6 +53,19 @@ app.post('/api/users', async (req, res) => {
 
    }
 });
+
+// for loading tasks
+app.get('/api/tasks', async (req, res) => {
+  try {
+    const tasks = await Task.find();
+    res.status(200).json(tasks);
+  } catch (error) {
+    console.error('An error occurred while retrieving tasks:', error);
+    res.status(500).json({ error: 'An error occurred while retrieving tasks' });
+  }
+});
+
+
 app.post('/api/tasks', async (req, res) => {
   try {
     // Extract the task data from the request body
@@ -76,6 +90,41 @@ app.post('/api/tasks', async (req, res) => {
     res.status(500).json({ error: 'An error occurred while adding the task' });
   }
 });
+
+// for updating tasks
+// PUT route to update a task by id
+app.patch('/api/tasks/:id', async (req, res) => {
+  const taskId = req.params.id;
+  const updatedTaskData = req.body;
+
+  try {
+    // Find the task by id and update it in the database
+    const updatedTask = await Task.findByIdAndUpdate(taskId, updatedTaskData, {
+      new: true, // Return the updated task
+    });
+
+    res.json(updatedTask);
+  } catch (error) {
+    console.error('Error updating task:', error);
+    res.status(500).json({ error: 'An error occurred while updating the task' });
+  }
+});
+
+//for deleting tasks
+app.delete('/api/tasks/:id', async (req, res) => {
+  const taskId = req.params.id;
+
+  try {
+    // Find the task by id and delete it in the database
+    const deletedTask = await Task.findByIdAndRemove(taskId);
+
+    res.json(deletedTask);
+  } catch (error) {
+    console.error('Error deleting task:', error);
+    res.status(500).json({ error: 'An error occurred while deleting the task' });
+  }
+ });
+
 
 /* -------------------------------------------------------------------------------------- */
 app.get('/',  (req,res) => {
