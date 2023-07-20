@@ -49,7 +49,7 @@ function addTaskEntry() {
 
 // Function to load existing tasks from the server
 function loadTasks() {
-  fetch('/tasks', {
+  fetch('/api/tasks', {
     method: 'GET',
   })
   .then(response => response.json())
@@ -76,13 +76,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
 // Function to save tasks when the save button is clicked
 function saveTasks() {
   var taskEntries = document.querySelectorAll('.task_entry');
-  taskEntries.forEach(function(taskEntry) {
+  taskEntries.forEach(function (taskEntry) {
     var taskStatus = taskEntry.querySelector('.task_status').textContent.trim();
     var taskName = taskEntry.querySelector('.task_name').textContent.trim();
     var taskContent = taskEntry.querySelector('.task_content').textContent.trim();
     var taskDate = taskEntry.querySelector('.task_date').textContent.trim();
     var taskPriority = taskEntry.querySelector('.task_priority').textContent.trim();
     var taskCategory = taskEntry.querySelector('.task_category').textContent.trim();
+    var taskId = taskEntry.getAttribute('data-id'); // Get the unique identifier
 
     var taskData = {
       task_status: taskStatus,
@@ -93,11 +94,11 @@ function saveTasks() {
       task_category: taskCategory
     };
 
-    var requestUrl = '/tasks';
+    var requestUrl = '/api/tasks';
     var requestMethod = 'POST';
 
-    if (taskEntry.getAttribute('data-id')) {
-      requestUrl += '/' + taskEntry.getAttribute('data-id');
+    if (taskId) {
+      requestUrl += '/' + taskId; // If the task already has an id, it means it exists in the backend, so we send a PUT request to update it.
       requestMethod = 'PUT';
     }
 
@@ -108,16 +109,16 @@ function saveTasks() {
       },
       body: JSON.stringify(taskData),
     })
-    .then(response => {
-      if (response.ok) {
-        console.log('Task added/updated successfully');
-      } else {
-        console.error('Failed to add/update task');
-      }
-    })
-    .catch(error => {
-      console.error('An error occurred while adding/updating the task:', error);
-    });
+      .then(response => {
+        if (response.ok) {
+          console.log('Task added/updated successfully');
+        } else {
+          console.error('Failed to add/update task');
+        }
+      })
+      .catch(error => {
+        console.error('An error occurred while adding/updating the task:', error);
+      });
   });
 }
 
@@ -201,8 +202,6 @@ function updateTaskEntry() {
     var taskDateElement = selectedTaskEntry.querySelector('.task_date');  
     var taskPriorityElement = selectedTaskEntry.querySelector('.task_priority');
     var taskCategoryElement = selectedTaskEntry.querySelector('.task_category');
-      
-    
       
     taskNameElement.textContent = taskBoxName.textContent;
     taskContentElement.textContent = taskBoxContent.textContent;
