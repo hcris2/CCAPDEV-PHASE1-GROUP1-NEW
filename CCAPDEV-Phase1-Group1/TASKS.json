@@ -1,0 +1,47 @@
+[
+    
+{
+    "task_status": "In Progress",
+    "task_name": "First Task",
+    "task_content": "Example of an entry",
+    "task_date": "June 21, 2023",
+    "task_priority": "Low",
+    "task_category": "Personal"
+},
+
+{
+    "task_status": "In Progress",
+    "task_name": "First Task",
+    "task_content": "Example of an entry",
+    "task_date": "June 21, 2023",
+    "task_priority": "Low",
+    "task_category": "Personal"
+},
+
+{
+    "task_status": "In Progress",
+    "task_name": "First Task",
+    "task_content": "Example of an entry",
+    "task_date": "June 21, 2023",
+    "task_priority": "Low",
+    "task_category": "Personal"
+},
+
+{
+    "task_status": "In Progress",
+    "task_name": "First Task",
+    "task_content": "Example of an entry",
+    "task_date": "June 21, 2023",
+    "task_priority": "Low",
+    "task_category": "Personal"
+},
+
+{
+    "task_status": "In Progress",
+    "task_name": "First Task",
+    "task_content": "Example of an entry",
+    "task_date": "June 21, 2023",
+    "task_priority": "Low",
+    "task_category": "Personal"
+}
+]
