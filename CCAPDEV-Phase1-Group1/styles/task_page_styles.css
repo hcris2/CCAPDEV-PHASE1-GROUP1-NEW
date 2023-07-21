@@ -330,13 +330,16 @@ select:focus {
 }
 .task_name{
     max-width: 200px;
+    overflow-x: hidden;
+    white-space: pre;
+    text-overflow: ellipsis;
     padding: 10px;
 }
 .task_date {
     padding:5px;
 }
 .task_content{
-    max-width: 200px;
+    max-width: 250px;
     overflow-x:hidden;
     white-space:pre;
     text-overflow:ellipsis;

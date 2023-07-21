@@ -268,6 +268,7 @@ function updateTaskEntry() {
     .then((response) => response.json())
     .then((updatedTask) => {
       // Handle the response from the server if needed
+      alert("Task updated!")
       console.log('Task updated:', updatedTask);
       // You can update the UI here or show a success message if required
     })

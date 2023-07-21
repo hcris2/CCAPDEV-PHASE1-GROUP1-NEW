@@ -149,6 +149,7 @@ async function showTasks() {
       taskList.append(div);
     }
 
+    taskList.off('click', '.view-button');
     taskList.on('click', '.view-button', function (event) {
       event.stopPropagation();
       let taskId = $(this).attr('data-task-id');
@@ -160,6 +161,9 @@ async function showTasks() {
       let taskId = $(this).attr('data-task-id');
       editTask(taskId);
     });
+    
+    // Remove any existing click event listeners on delete buttons before adding a new one
+    taskList.off('click', '.delete-button');
 
     taskList.on('click', '.delete-button', function (event) {
       event.stopPropagation();
@@ -171,51 +175,55 @@ async function showTasks() {
   }
 }
 
-  
-  async function viewTask(id) {
-     try {
+async function viewTask(id) {
+  try {
     const response = await fetch(`/api/tasks/${id}`);
     const task = await response.json();
     if (!task) {
       return alert('Task not found');
     }
-  
-      let popupContainer = document.createElement('div');
-      popupContainer.id = 'taskPopupContainer';
-  
-      let popupContent = document.createElement('div');
-      popupContent.id = 'taskPopupContent';
-      popupContent.innerHTML = `
-        <div style="text-align: center; margin-top: 10px;">
-          <h3>${task.task_name}</h3>
-          <p>${task.task_content}</p>
-          <p>Status: ${task.task_status}</p>
-          <p>Due Date: ${task.task_date}</p>
-          <p>Priority: ${task.task_priority}</p>
-          <p>Category: ${task.task_category}<br><br></p>
-          <button class="edit-button" data-task-id="${task._id}" style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">Edit</button>
-          <button class="close-button" style="background-color: #f44336; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">Close</button>
-          </div>
-      `;
-          document.body.classList.add('popup-open');
-  
-          $('.edit-button').on('click', function () {
-            let taskId = $(this).attr('data-task-id');
-            editTask(taskId);
-          });
-      $('.edit-button').on('click', function () {
-        let taskId = $(this).attr('data-task-id');
-        editTask(taskId);
-      });
-  
-      $('.close-button').on('click', function () {
-        closePopup();
-      });
-    } catch (error) {
-      console.error('Error fetching task details:', error);
-      alert('An error occurred while fetching task details');
-    }
+
+    let popupContainer = document.createElement('div');
+    popupContainer.id = 'taskPopupContainer';
+
+    let popupContent = document.createElement('div');
+    popupContent.id = 'taskPopupContent';
+    popupContent.innerHTML = `
+      <div style="text-align: center; margin-top: 10px;">
+        <h3>${task.task_name}</h3>
+        <p>${task.task_content}</p>
+        <p>Status: ${task.task_status}</p>
+        <p>Due Date: ${task.task_date}</p>
+        <p>Priority: ${task.task_priority}</p>
+        <p>Category: ${task.task_category}<br><br></p>
+        <button class="edit-button" data-task-id="${task._id}" style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">Edit</button>
+        <button class="close-button" style="background-color: #f44336; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">Close</button>
+      </div>
+    `;
+    document.body.classList.add('popup-open');
+
+    // Remove existing click event listeners on edit buttons before adding new ones
+    popupContent.querySelector('.edit-button').removeEventListener('click', editTaskOnClick);
+    popupContent.querySelector('.edit-button').addEventListener('click', editTaskOnClick);
+
+    popupContent.querySelector('.close-button').addEventListener('click', function () {
+      closePopup();
+    });
+
+    popupContainer.appendChild(popupContent);
+    document.body.appendChild(popupContainer);
+
+  } catch (error) {
+    console.error('Error fetching task details:', error);
+    alert('An error occurred while fetching task details');
   }
+}
+
+function editTaskOnClick() {
+  let taskId = this.getAttribute('data-task-id');
+  editTask(taskId);
+}
+
   
     
   function closePopup() {
