@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   loadTasks();
   updateTaskCounter();
+  
 });
 
 
@@ -56,6 +57,7 @@ async function loadTasks() {
     });
 
     updateTaskCounter();
+ 
   } catch (error) {
     console.error('An error occurred while fetching tasks:', error);
   }

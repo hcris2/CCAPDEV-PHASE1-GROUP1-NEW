@@ -35,7 +35,7 @@ $(document).ready(async function() {
       alert('An error occurred while adding the task.');
     }
   });
-
+  
     $(document).on('click', '#cancel_edit_button', function(event) {
     event.preventDefault();
     closeEditContainer();
@@ -43,38 +43,54 @@ $(document).ready(async function() {
 
   $('#logout_button').on('click', function(event) {
     event.preventDefault();
-    localStorage.removeItem('loggedIn');
-    window.location.href = 'index.html';
-  });
-
-  document.getElementById('logout_button').addEventListener('click', function() {
-    localStorage.clear();
-    window.location.href = 'register.html';
-  });
-
-  $('#search_form').on('submit', function(event) {
-    event.preventDefault();
-    const searchQuery = $('#search_input').val().toLowerCase();
-
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    let filteredTasks = tasks.filter(task => {
-      const dueDate = task.dueDate.toLowerCase();
-      const priority = task.priority.toLowerCase();
-      const details = task.details.toLowerCase();
-
-      return (
-        dueDate.includes(searchQuery) ||
-        priority.includes(searchQuery) ||
-        details.includes(searchQuery)
-      );
+  
+    // Make an HTTP request to the server to handle logout
+    $.ajax({
+      type: 'POST',
+      url: '/api/logout', // Define the endpoint on the server to handle logout
+      success: function(response) {
+        console.log('Logout successful:', response);
+        window.location.href = 'index.html';
+      },
+      error: function(error) {
+        console.error('Error during logout:', error);
+        // Handle any errors that may occur during logout
+      }
     });
-
-    showTasks(filteredTasks);
   });
+  
 
-  $('#view_all_button').on('click', function() {
-    showTasks();
+ $('#search_form').on('submit', function(event) {
+  event.preventDefault();
+  const searchQuery = $('#search_input').val().toLowerCase();
+
+  $.ajax({
+    type: 'GET',
+    url: `/api/search?search=${searchQuery}`, // Define the endpoint on the server to handle the search
+    success: function(response) {
+      showTasks(response);
+    },
+    error: function(error) {
+      console.error('Error during search:', error);
+      // Handle any errors that may occur during search
+    }
   });
+});
+
+$('#view_all_button').on('click', function() {
+  $.ajax({
+    type: 'GET',
+    url: '/api/view', // Define the endpoint on the server to handle fetching all tasks
+    success: function(response) {
+      showTasks(response); // Display all tasks on the page
+    },
+    error: function(error) {
+      console.error('Error fetching tasks:', error);
+      // Handle any errors that may occur during fetching tasks
+    }
+  });
+});
+
 
   $('#category_form').on('submit', function(event) {
     event.preventDefault();
@@ -117,7 +133,6 @@ async function showTasks() {
 
     let taskList = $('#task_list');
     taskList.empty();
-
     for (let task of tasks) {
       let div = $('<div></div>');
       div.attr('id', `task_${task._id}`);
@@ -157,7 +172,6 @@ async function showTasks() {
 }
 
   
-
   async function viewTask(id) {
      try {
     const response = await fetch(`/api/tasks/${id}`);
@@ -183,12 +197,12 @@ async function showTasks() {
           <button class="close-button" style="background-color: #f44336; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">Close</button>
           </div>
       `;
+          document.body.classList.add('popup-open');
   
-      popupContainer.innerHTML = popupContent.innerHTML;
-      document.body.appendChild(popupContainer);
-  
-      document.body.classList.add('popup-open');
-  
+          $('.edit-button').on('click', function () {
+            let taskId = $(this).attr('data-task-id');
+            editTask(taskId);
+          });
       $('.edit-button').on('click', function () {
         let taskId = $(this).attr('data-task-id');
         editTask(taskId);
@@ -202,6 +216,7 @@ async function showTasks() {
       alert('An error occurred while fetching task details');
     }
   }
+  
     
   function closePopup() {
     document.getElementById('taskPopupContainer').remove();
@@ -393,8 +408,6 @@ async function deleteTask(id) {
       alert('An error occurred while fetching tasks.');
     }
   }
-  
-
   $(document).on('click', '#exit_button', function() {
     $('#popupContainer').remove();
   });
