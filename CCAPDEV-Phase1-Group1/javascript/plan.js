@@ -1,43 +1,39 @@
-$(document).ready(function() {
-  $('#task_form').on('submit', function(event) {
+$(document).ready(async function() {
+  $('#task_form').on('submit', async function(event) {
     event.preventDefault();
 
     const task = {
-      name: document.getElementById('task_name').value,
-      details: document.getElementById('task_details').value,
-      dueDate: document.getElementById('task_due_date').value,
-      priority: document.getElementById('task_priority').value,
-      category: document.getElementById('task_category').value
+      task_name: document.getElementById('task_name').value,
+      task_status: document.getElementById('task_status').value,
+      task_content: document.getElementById('task_details').value,
+      task_date: document.getElementById('task_due_date').value,
+      task_priority: document.getElementById('task_priority').value,
+      task_category: document.getElementById('task_category').value
     };
 
-    fetch('/api/plans', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(task)
-    })
-      .then(response => {
-        if (response.ok) {
-          // Task creation successful
-          return response.json(); // parse the response body as JSON
-        } else {
-          throw new Error('Error adding task');
-        }
-      })
-      .then(data => {
-        alert('Task added');
-        showTasks();
-        updateCalendar();
-        document.getElementById('task_form').reset();
-        // You can access data from the server's response here
-        console.log('Server response:', data);
-      })
-      .catch(error => {
-        console.error('Error adding task:', error);
-        alert('An error occurred while adding the task.');
+    try {
+      const response = await fetch('/api/tasks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(task)
       });
-    
+
+      if (response.ok) {
+        alert('Task added successfully!');
+        showTasks(); // Refresh the task list after adding the new task
+        updateCalendar(); // Refresh the calendar after adding the new task
+        document.getElementById('task_form').reset(); // Reset the form
+        updateCalendarOnAction();
+      } else {
+        console.error('Failed to add task:', response.statusText);
+        alert('An error occurred while adding the task.');
+      }
+    } catch (error) {
+      console.error('Error adding task:', error);
+      alert('An error occurred while adding the task.');
+    }
   });
   
     $(document).on('click', '#cancel_edit_button', function(event) {
@@ -129,15 +125,20 @@ $('#view_all_button').on('click', function() {
     showNotifications();
   });
 
-  function showTasks(tasks) {
+async function showTasks() {
+  try {
+    const response = await fetch('/api/tasks'); // Fetch tasks from the API
+    const tasks = await response.json();
+    console.log(tasks)
+
     let taskList = $('#task_list');
     taskList.empty();
-  
     for (let task of tasks) {
       let div = $('<div></div>');
-      div.attr('id', `task_${task._id}`); 
+      div.attr('id', `task_${task._id}`);
       div.html(`
         <h3>${task.task_name}</h3>
+        <p>Status: ${task.task_status}</p>
         <p>${task.task_content}</p>
         <button class="view-button" data-task-id="${task._id}">View</button>
         <button class="delete-button" data-task-id="${task._id}">Delete</button>
@@ -147,101 +148,72 @@ $('#view_all_button').on('click', function() {
       div.css('border-radius', '5px');
       taskList.append(div);
     }
-    /* FOR COLORS OF DELETE AND VIEW BUTTON */
-    $('.view-button').css('border', '1px solid rgb(184, 88, 88)');
-    $('.delete-button').css('background-color', 'rgb(255, 87, 87)');
 
-    $('.view-button').hover(
-      function() {
-        $(this).css('background-color', '#8ab48a'); // Change color on hover
-      },
-      function() {
-        $(this).css('background-color', '#A4D0A4'); // Revert color when not hovering
-      }
-    );
-
-    $('.delete-button').hover(
-      function() {
-        $(this).css('background-color', 'rgb(248, 65, 65)'); // Change color on hover
-      },
-      function() {
-        $(this).css('background-color', 'rgb(255, 87, 87)'); // Revert color when not hovering
-      }
-    );
-
-    let taskContainer = $('#task_container');
-    taskContainer.css({
-      boxSizing: 'border-box'
-    });
-
-    taskList.on('click', '.view-button', function(event) {
+    taskList.on('click', '.view-button', function (event) {
       event.stopPropagation();
-      let taskId = parseInt($(this).attr('data-task-id'));
+      let taskId = $(this).attr('data-task-id');
       viewTask(taskId);
     });
 
-    taskList.on('click', '.delete-button', function(event) {
+    taskList.on('click', '.edit-button', function (event) {
       event.stopPropagation();
-      let taskId = parseInt($(this).attr('data-task-id'));
-      deleteTask(taskId);
+      let taskId = $(this).attr('data-task-id');
+      editTask(taskId);
     });
 
+    taskList.on('click', '.delete-button', function (event) {
+      event.stopPropagation();
+      let taskId = $(this).attr('data-task-id');
+      deleteTask(taskId);
+    });
+  } catch (error) {
+    console.error('Error fetching tasks:', error);
   }
+}
 
-
-  function viewTask(id) {
-    let isExitButtonAttached = false;
   
-    $.ajax({
-      type: 'GET',
-      url: `/api/view/${id}`, // Define the endpoint on the server to fetch a single task by ID
-      success: function (task) {
-        if (task) {
-          let popupContainer = document.createElement('div');
-          popupContainer.id = 'taskPopupContainer';
+  async function viewTask(id) {
+     try {
+    const response = await fetch(`/api/tasks/${id}`);
+    const task = await response.json();
+    if (!task) {
+      return alert('Task not found');
+    }
   
-          let popupContent = document.createElement('div');
-          popupContent.id = 'taskPopupContent';
-          popupContent.innerHTML = `
-            <div style="text-align: center; margin-top: 10px;">
-              <p>${task.task_status}</p>
-              <h3>${task.task_name}</h3>
-              <p>${task.task_details}</p>
-              <p>Due Date: ${task.task_due_date}</p>
-              <p>Priority: ${task.task_priority}</p>
-              <p>Category: ${task.task_category}<br><br></p>
-              <button class="edit-button" data-task-id="${task._id}" style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">Edit</button>
-              <button class="close-button" style="background-color: #f44336; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">Close</button>
-            </div>
-          `;
+      let popupContainer = document.createElement('div');
+      popupContainer.id = 'taskPopupContainer';
   
-          popupContainer.innerHTML = popupContent.innerHTML;
-          document.body.appendChild(popupContainer);
-  
+      let popupContent = document.createElement('div');
+      popupContent.id = 'taskPopupContent';
+      popupContent.innerHTML = `
+        <div style="text-align: center; margin-top: 10px;">
+          <h3>${task.task_name}</h3>
+          <p>${task.task_content}</p>
+          <p>Status: ${task.task_status}</p>
+          <p>Due Date: ${task.task_date}</p>
+          <p>Priority: ${task.task_priority}</p>
+          <p>Category: ${task.task_category}<br><br></p>
+          <button class="edit-button" data-task-id="${task._id}" style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">Edit</button>
+          <button class="close-button" style="background-color: #f44336; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">Close</button>
+          </div>
+      `;
           document.body.classList.add('popup-open');
   
           $('.edit-button').on('click', function () {
             let taskId = $(this).attr('data-task-id');
             editTask(taskId);
           });
+      $('.edit-button').on('click', function () {
+        let taskId = $(this).attr('data-task-id');
+        editTask(taskId);
+      });
   
-          $('.close-button').on('click', function () {
-            closePopup();
-          });
-        }
-      },
-      error: function (error) {
-        console.error('Error fetching task details:', error);
-        // Handle any errors that may occur during fetching task details
-      }
-    });
-  
-    // Check if the event listener is already attached before adding it
-    if (!isExitButtonAttached) {
       $('.close-button').on('click', function () {
         closePopup();
       });
-      isExitButtonAttached = true;
+    } catch (error) {
+      console.error('Error fetching task details:', error);
+      alert('An error occurred while fetching task details');
     }
   }
   
@@ -251,51 +223,70 @@ $('#view_all_button').on('click', function() {
     document.body.classList.remove('popup-open');
   }
 
-  function editTask(id) {
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    let task = tasks.find(task => task.id === id);
+  async function editTask(id) {
+    try {
+      const response = await fetch(`/api/tasks/${id}`);
+      const task = await response.json();
+      if (!task) {
+        return alert('Task not found');
+      }
   
-    if (task) {
       closePopup();
       let editContainer = document.createElement('div');
       editContainer.id = 'editContainer';
       editContainer.innerHTML = `
-        <h3 >Edit Task</h3>
+        <h3>Edit Task</h3>
         <form id="edit_form">
-          <input type="text" id="edit_task_name" value="${task.name}" required>
-          <textarea id="edit_task_details" required>${task.details}</textarea>
-          <input type="date" id="edit_task_due_date" value="${task.dueDate}" required>
+          <input type="text" id="edit_task_name" value="${task.task_name}" required>
+          <textarea id="edit_task_details" required>${task.task_content}</textarea>
+          <input type="date" id="edit_task_due_date" value="${task.task_date}" required>
           <div class="custom-select">
-            <select id="edit_task_priority" required>
-              <option value="Low" ${task.priority === 'Low' ? 'selected' : ''}>Low</option>
-              <option value="Medium" ${task.priority === 'Medium' ? 'selected' : ''}>Medium</option>
-              <option value="High" ${task.priority === 'High' ? 'selected' : ''}>High</option>
+            <select id="edit_task_status" required>
+              <option value="Pending" ${task.task_status === 'Pending' ? 'selected' : ''}>Pending</option>
+              <option value="In Progress" ${task.task_status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+              <option value="Completed" ${task.task_status === 'Completed' ? 'selected' : ''}>Completed</option>
             </select>
+  
+            <select id="edit_task_priority" required>
+              <option value="Low" ${task.task_priority === 'Low' ? 'selected' : ''}>Low</option>
+              <option value="Medium" ${task.task_priority === 'Medium' ? 'selected' : ''}>Medium</option>
+              <option value="High" ${task.task_priority === 'High' ? 'selected' : ''}>High</option>
+            </select>
+  
             <select id="edit_task_category" required>
-              <option value="Personal" ${task.category === 'Personal' ? 'selected' : ''}>Personal</option>
-              <option value="Work" ${task.category === 'Work' ? 'selected' : ''}>Work</option>
-              <option value="Study" ${task.category === 'Study' ? 'selected' : ''}>Study</option>
-              <option value="Other" ${task.category === 'Other' ? 'selected' : ''}>Other</option>
+              <option value="Personal" ${task.task_category === 'Personal' ? 'selected' : ''}>Personal</option>
+              <option value="Work" ${task.task_category === 'Work' ? 'selected' : ''}>Work</option>
+              <option value="Study" ${task.task_category === 'Study' ? 'selected' : ''}>Study</option>
+              <option value="Other" ${task.task_category === 'Other' ? 'selected' : ''}>Other</option>
             </select>
             <button type="submit">Save</button>
             <button id="cancel_edit_button" style="background-color: #f44336; color: #fff;">Cancel</button>
-            </div>
+          </div>
         </form>
-      `
+      `;
   
       document.body.appendChild(editContainer);
-      document.getElementById('edit_form').addEventListener('submit', function(event) {
+  
+      // Add event listener for the edit form submission
+      document.getElementById('edit_form').addEventListener('submit', function (event) {
         event.preventDefault();
         saveEditedTask(id);
       });
   
-      document.getElementById('cancel_edit_button').addEventListener('click', function(event) {
+      // Add event listener for the cancel button
+      document.getElementById('cancel_edit_button').addEventListener('click', function (event) {
         event.preventDefault();
         closeEditContainer();
       });
-      
+
+      updateCalendarOnAction();
+  
+    } catch (error) {
+      console.error('Error fetching task details for editing:', error);
+      alert('An error occurred while fetching task details for editing');
     }
   }
+  
   function closeEditContainer() {
     let editContainer = document.getElementById('editContainer');
     if (editContainer) {
@@ -303,32 +294,63 @@ $('#view_all_button').on('click', function() {
     }
   }
   
-  function saveEditedTask(id) {
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    let taskIndex = tasks.findIndex(task => task.id === id);
+  async function saveEditedTask(id) {
+    try {
+      const task = {
+        task_name: document.getElementById('edit_task_name').value,
+        task_content: document.getElementById('edit_task_details').value,
+        task_date: document.getElementById('edit_task_due_date').value,
+        task_status: document.getElementById('edit_task_status').value,
+        task_priority: document.getElementById('edit_task_priority').value,
+        task_category: document.getElementById('edit_task_category').value
+      };
   
-    if (taskIndex !== -1) {
-      tasks[taskIndex].name = document.getElementById('edit_task_name').value;
-      tasks[taskIndex].details = document.getElementById('edit_task_details').value;
-      tasks[taskIndex].dueDate = document.getElementById('edit_task_due_date').value;
-      tasks[taskIndex].priority = document.getElementById('edit_task_priority').value;
-      tasks[taskIndex].category = document.getElementById('edit_task_category').value;
+      const response = await fetch(`/api/tasks/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(task)
+      });
   
-      localStorage.setItem('tasks', JSON.stringify(tasks));
-      alert('Task updated');
-      closeEditContainer();
-      showTasks(tasks); 
+      if (response.ok) {
+        alert('Task updated');
+        closeEditContainer();
+        showTasks(); // Refresh the task list after updating the task
+        updateCalendar(); // Refresh the calendar after updating the task
+      } else {
+        console.error('Failed to update task:', response.statusText);
+        alert('An error occurred while updating the task.');
+      }
+    } catch (error) {
+      console.error('Error updating task:', error);
+      alert('An error occurred while updating the task.');
     }
   }
+  
 
   
-  function deleteTask(id) {
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    let updatedTasks = tasks.filter(task => task.id !== id);
-    localStorage.setItem('tasks', JSON.stringify(updatedTasks));
-    showTasks(updatedTasks);
-    updateCalendar(updatedTasks);
+// Delete task from MongoDB
+async function deleteTask(id) {
+  try {
+    const response = await fetch(`/api/tasks/${id}`, {
+      method: 'DELETE',
+    });
+
+    if (response.ok) {
+      alert('Task deleted');
+      showTasks(); // Refresh the task list after deleting the task
+      updateCalendar(); // Refresh the calendar after deleting the task
+      updateCalendarOnAction();
+    } else {
+      console.error('Failed to delete task:', response.statusText);
+      alert('An error occurred while deleting the task.');
+    }
+  } catch (error) {
+    console.error('Error deleting task:', error);
+    alert('An error occurred while deleting the task.');
   }
+}
   
 
   $(document).on('click', '#task_list button.delete-button', function(event) {
@@ -338,58 +360,54 @@ $('#view_all_button').on('click', function() {
   });
 
 
-  function showAllTasks() {
-    $.ajax({
-      type: 'GET',
-      url: '/api/view', // Define the endpoint on the server to handle fetching all tasks
-      success: function (tasks) {
-        let taskList = '';
+  async function showAllTasks() {
+    try {
+      const response = await fetch('/api/tasks'); // Fetch tasks from the API
+      const tasks = await response.json();
   
-        for (let task of tasks) {
-          taskList += `
-            <div style="text-align: center;">
-              <p>${task.task_status}</p>
-              <h3>${task.task_name}</h3>
-              <p>${task.task_content}</p>
-              <p>Due date: ${task.task_due_date}</p>
-              <p>Priority: ${task.task_priority}</p>
-              <p>Category: ${task.task_category}</p>
-            </div>
-            <hr>
-            <br>
-          `;
-        }
-  
-        let popupContainer = document.createElement('div');
-        popupContainer.id = 'popupContainer';
-  
-        let popupContent = document.createElement('div');
-        popupContent.id = 'taskPopupContent';
-        popupContent.innerHTML = `
-          <h2 style="font-size: 45px; font-family: 'Merriweather'; font-weight: bold;">ALL TASKS<br></h2>
-          <div id="taskListContainer" class="scrollable-content">
-            ${taskList}
+      let taskList = '';
+      for (let task of tasks) {
+        taskList += `
+          <div style="text-align: center;">
+            <h3>${task.task_name}</h3>
+            <p>Status: ${task.task_status}</p>
+            <p>${task.task_content}</p>
+            <p>Due date: ${task.task_date}</p>
+            <p>Priority: ${task.task_priority}</p>
+            <p>Category: ${task.task_category}</p>
           </div>
-          <button id="exitButton" style="background-color: #f44336; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">Exit</button>
+          <hr>
+          <br>
         `;
-  
-        popupContainer.appendChild(popupContent);
-        document.body.appendChild(popupContainer);
-  
-        popupContainer.style.display = 'block';
-  
-        let exitButton = document.getElementById('exitButton');
-        exitButton.addEventListener('click', function () {
-          popupContainer.style.display = 'none';
-        });
-      },
-      error: function (error) {
-        console.error('Error fetching tasks:', error);
-        // Handle any errors that may occur during fetching tasks
       }
-    });
-  }
   
+      let popupContainer = document.createElement('div');
+      popupContainer.id = 'popupContainer';
+  
+      let popupContent = document.createElement('div');
+      popupContent.id = 'taskPopupContent';
+      popupContent.innerHTML = `
+        <h2 style="font-size: 45px; font-family: 'Merriweather'; font-weight: bold;">ALL TASKS<br></h2>
+        <div id="taskListContainer" class="scrollable-content">
+          ${taskList}
+        </div>
+        <button id="exitButton" style="background-color: #f44336; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">Exit</button>
+      `;
+  
+      popupContainer.appendChild(popupContent);
+      document.body.appendChild(popupContainer);
+  
+      popupContainer.style.display = 'block';
+  
+      let exitButton = document.getElementById('exitButton');
+      exitButton.addEventListener('click', function () {
+        popupContainer.style.display = 'none';
+      });
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+      alert('An error occurred while fetching tasks.');
+    }
+  }
   $(document).on('click', '#exit_button', function() {
     $('#popupContainer').remove();
   });
@@ -411,33 +429,34 @@ $('#view_all_button').on('click', function() {
     });
   });
 
-  function updateTask(id, updatedTask) {
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    let taskIndex = tasks.findIndex(task => task.id === id);
-  
-    if (taskIndex !== -1) {
-      tasks[taskIndex] = updatedTask;
-      localStorage.setItem('tasks', JSON.stringify(tasks));
-      alert('Task updated');
-      showTasks(tasks); // Pass the updated tasks to showTasks function
-      updateCalendar(tasks); // Pass the updated tasks to updateCalendar function
-    }
-  }
+// Function to update the calendar with tasks
+async function updateCalendar() {
+  try {
+    const response = await fetch('/api/tasks'); // Fetch tasks from the API
+    const tasks = await response.json();
+    console.log(tasks);
 
-  function updateCalendar() {
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     let events = tasks.map(task => {
       return {
-        id: task.id,
-        title: task.name,
-        start: task.dueDate,
-        color: getEventColor(task.priority)
+        id: task._id, // Use the MongoDB document _id as the event ID
+        title: task.task_name,
+        start: task.task_date, // Assuming task_date is the field with the date for the calendar event
+        color: getEventColor(task.task_priority) // Replace with the appropriate field from MongoDB
       };
     });
 
+    // Clear existing events and add new events from the updated tasks
     $('#calendar').fullCalendar('removeEvents');
     $('#calendar').fullCalendar('addEventSource', events);
     $('#calendar').fullCalendar('rerenderEvents');
+  } catch (error) {
+    console.error('Error fetching tasks for calendar:', error);
+  }
+}
+
+  // Update the calendar when tasks are added, edited, or deleted
+  async function updateCalendarOnAction() {
+    await updateCalendar();
   }
 
   function getEventColor(priority) {
@@ -454,21 +473,29 @@ $('#view_all_button').on('click', function() {
     defaultView: 'month',
     editable: true,
     eventLimit: true,
-    events: getTasksForCalendar()
+    events: [] // Provide an empty array as the initial events data
   });
 
-  function getTasksForCalendar() {
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    let events = tasks.map(task => {
-      return {
-        id: task.id,
-        title: task.name,
-        start: task.dueDate,
-        color: getEventColor(task.priority)
-      };
-    });
-
-    return events;
+  async function getTasksForCalendar() {
+    try {
+      const response = await fetch('/api/tasks'); // Fetch tasks from the API
+      const tasks = await response.json();
+      console.log(tasks);
+  
+      let events = tasks.map(task => {
+        return {
+          id: task._id, // Use the MongoDB document _id as the event ID
+          title: task.task_name,
+          start: task.task_date, // Assuming task_date is the field with the date for the calendar event
+          color: getEventColor(task.task_priority) // Replace with the appropriate field from MongoDB
+        };
+      });
+  
+      return events;
+    } catch (error) {
+      console.error('Error fetching tasks for calendar:', error);
+      return [];
+    }
   }
 
   $(document).on('click', '#task_list button', function() {
@@ -600,7 +627,11 @@ function deleteNotification(id) {
 
 
 
+
+
   showTasks();
   showCategories();
   showNotifications();
+  updateCalendar();
+  updateCalendarOnAction();
 });
