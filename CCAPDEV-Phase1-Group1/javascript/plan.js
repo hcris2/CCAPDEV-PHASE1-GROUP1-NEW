@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(async function() {
   $('#task_form').on('submit', async function(event) {
     event.preventDefault();
 
@@ -25,6 +25,7 @@ $(document).ready(function() {
         showTasks(); // Refresh the task list after adding the new task
         updateCalendar(); // Refresh the calendar after adding the new task
         document.getElementById('task_form').reset(); // Reset the form
+        updateCalendarOnAction();
       } else {
         console.error('Failed to add task:', response.statusText);
         alert('An error occurred while adding the task.');
@@ -113,9 +114,6 @@ async function showTasks() {
     const response = await fetch('/api/tasks'); // Fetch tasks from the API
     const tasks = await response.json();
     console.log(tasks)
-
-    // Update local storage with the fetched tasks
-    localStorage.setItem('tasks', JSON.stringify(tasks));
 
     let taskList = $('#task_list');
     taskList.empty();
@@ -265,6 +263,8 @@ async function showTasks() {
         event.preventDefault();
         closeEditContainer();
       });
+
+      updateCalendarOnAction();
   
     } catch (error) {
       console.error('Error fetching task details for editing:', error);
@@ -326,6 +326,7 @@ async function deleteTask(id) {
       alert('Task deleted');
       showTasks(); // Refresh the task list after deleting the task
       updateCalendar(); // Refresh the calendar after deleting the task
+      updateCalendarOnAction();
     } else {
       console.error('Failed to delete task:', response.statusText);
       alert('An error occurred while deleting the task.');
@@ -415,33 +416,34 @@ async function deleteTask(id) {
     });
   });
 
-  function updateTask(id, updatedTask) {
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    let taskIndex = tasks.findIndex(task => task.id === id);
-  
-    if (taskIndex !== -1) {
-      tasks[taskIndex] = updatedTask;
-      localStorage.setItem('tasks', JSON.stringify(tasks));
-      alert('Task updated');
-      showTasks(tasks); // Pass the updated tasks to showTasks function
-      updateCalendar(tasks); // Pass the updated tasks to updateCalendar function
-    }
-  }
+// Function to update the calendar with tasks
+async function updateCalendar() {
+  try {
+    const response = await fetch('/api/tasks'); // Fetch tasks from the API
+    const tasks = await response.json();
+    console.log(tasks);
 
-  function updateCalendar() {
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     let events = tasks.map(task => {
       return {
-        id: task.id,
-        title: task.name,
-        start: task.dueDate,
-        color: getEventColor(task.priority)
+        id: task._id, // Use the MongoDB document _id as the event ID
+        title: task.task_name,
+        start: task.task_date, // Assuming task_date is the field with the date for the calendar event
+        color: getEventColor(task.task_priority) // Replace with the appropriate field from MongoDB
       };
     });
 
+    // Clear existing events and add new events from the updated tasks
     $('#calendar').fullCalendar('removeEvents');
     $('#calendar').fullCalendar('addEventSource', events);
     $('#calendar').fullCalendar('rerenderEvents');
+  } catch (error) {
+    console.error('Error fetching tasks for calendar:', error);
+  }
+}
+
+  // Update the calendar when tasks are added, edited, or deleted
+  async function updateCalendarOnAction() {
+    await updateCalendar();
   }
 
   function getEventColor(priority) {
@@ -458,21 +460,29 @@ async function deleteTask(id) {
     defaultView: 'month',
     editable: true,
     eventLimit: true,
-    events: getTasksForCalendar()
+    events: [] // Provide an empty array as the initial events data
   });
 
-  function getTasksForCalendar() {
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    let events = tasks.map(task => {
-      return {
-        id: task.id,
-        title: task.name,
-        start: task.dueDate,
-        color: getEventColor(task.priority)
-      };
-    });
-
-    return events;
+  async function getTasksForCalendar() {
+    try {
+      const response = await fetch('/api/tasks'); // Fetch tasks from the API
+      const tasks = await response.json();
+      console.log(tasks);
+  
+      let events = tasks.map(task => {
+        return {
+          id: task._id, // Use the MongoDB document _id as the event ID
+          title: task.task_name,
+          start: task.task_date, // Assuming task_date is the field with the date for the calendar event
+          color: getEventColor(task.task_priority) // Replace with the appropriate field from MongoDB
+        };
+      });
+  
+      return events;
+    } catch (error) {
+      console.error('Error fetching tasks for calendar:', error);
+      return [];
+    }
   }
 
   $(document).on('click', '#task_list button', function() {
@@ -605,7 +615,10 @@ function deleteNotification(id) {
 
 
 
+
   showTasks();
   showCategories();
   showNotifications();
+  updateCalendar();
+  updateCalendarOnAction();
 });
