@@ -127,15 +127,16 @@ app.delete('/api/tasks/:id', async (req, res) => {
  });
 
 // Inside the server-side POST endpoint for task creation
-app.post('/api/create', async (req, res) => {
+app.post('/api/plans', async (req, res) => {
   try {
-    const { name, details, dueDate, priority, category } = req.body;
-    const task = new Task({ name, details, dueDate, priority, category });
+    const { task_name, task_details, task_due_date, task_priority, task_category } = req.body;
+    const task = new Plan({ task_name, task_details, task_due_date, task_priority, task_category });
     const validationErrors = task.validateSync(); // Validate the task object
+    
     if (validationErrors) {
-      // If validation fails, return the errors in the response
       const errors = Object.values(validationErrors.errors).map((err) => err.message);
       return res.status(400).json({ errors });
+      
     }
     await task.save();
     res.status(201).json(task);
@@ -145,6 +146,35 @@ app.post('/api/create', async (req, res) => {
   }
 });
 
+app.get('/api/view', async (req, res) => {
+  try {
+    // Fetch all tasks from the database
+    const allTasks = await Task.find({});
+    res.status(200).json(allTasks);
+  } catch (error) {
+    console.error('Error fetching tasks:', error);
+    res.status(500).json({ error: 'An error occurred while fetching tasks' });
+  }
+});
+
+app.get('/api/view/:id', async (req, res) => {
+  try {
+    const taskId = req.params.id; // Get the task ID from the URL parameters
+    const task = await Plan.findById(taskId); // Fetch the task details from the database by ID
+
+    if (!task) {
+      // If task with the given ID is not found, return a 404 Not Found response
+      return res.status(404).json({ error: 'Task not found' });
+    }
+
+    // If task is found, return the task details as a JSON response
+    res.status(200).json(task);
+  } catch (error) {
+    // If an error occurs during fetching the task details, return a 500 Internal Server Error response
+    console.error('Error fetching task details:', error);
+    res.status(500).json({ error: 'An error occurred while fetching task details' });
+  }
+});
 /* -------------------------------------------------------------------------------------- */
 app.get('/',  (req,res) => {
     const indexPath = path.join(__dirname, 'index.html');

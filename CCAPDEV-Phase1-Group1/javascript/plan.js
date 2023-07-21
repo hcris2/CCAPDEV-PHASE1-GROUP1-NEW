@@ -10,23 +10,36 @@ $(document).ready(function() {
       category: document.getElementById('task_category').value
     };
 
-    $.ajax({
-      type: 'POST',
-      url: '/api/create',
-      data: task, // Corrected to use the task object
-      success: function(response) {
-        // Task creation successful
+    fetch('/api/plans', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(task)
+    })
+      .then(response => {
+        if (response.ok) {
+          // Task creation successful
+          return response.json(); // parse the response body as JSON
+        } else {
+          throw new Error('Error adding task');
+        }
+      })
+      .then(data => {
         alert('Task added');
         showTasks();
         updateCalendar();
         document.getElementById('task_form').reset();
-      },
-      error: function(error) {
+        // You can access data from the server's response here
+        console.log('Server response:', data);
+      })
+      .catch(error => {
         console.error('Error adding task:', error);
         alert('An error occurred while adding the task.');
-      }
-    });
+      });
+    
   });
+  
     $(document).on('click', '#cancel_edit_button', function(event) {
     event.preventDefault();
     closeEditContainer();
@@ -73,7 +86,7 @@ $('#view_all_button').on('click', function() {
     type: 'GET',
     url: '/api/view', // Define the endpoint on the server to handle fetching all tasks
     success: function(response) {
-      showTasks(response);
+      showTasks(response); // Display all tasks on the page
     },
     error: function(error) {
       console.error('Error fetching tasks:', error);
@@ -119,27 +132,21 @@ $('#view_all_button').on('click', function() {
   function showTasks(tasks) {
     let taskList = $('#task_list');
     taskList.empty();
-
-    tasks = tasks || JSON.parse(localStorage.getItem('tasks')) || [];
-
+  
     for (let task of tasks) {
       let div = $('<div></div>');
-      div.attr('id', `task_${task.id}`);
+      div.attr('id', `task_${task._id}`); 
       div.html(`
-        <h3>${task.name}</h3>
-        <p>${task.details}</p>
-        <button class="view-button" data-task-id="${task.id}">View</button>
-        <button class="delete-button" data-task-id="${task.id}">Delete</button>
+        <h3>${task.task_name}</h3>
+        <p>${task.task_content}</p>
+        <button class="view-button" data-task-id="${task._id}">View</button>
+        <button class="delete-button" data-task-id="${task._id}">Delete</button>
       `);
       div.css('border-bottom', '1px solid rgb(214, 214, 214)');
       div.css('padding-bottom', '10px');
       div.css('border-radius', '5px');
-      
       taskList.append(div);
     }
-
-    
-
     /* FOR COLORS OF DELETE AND VIEW BUTTON */
     $('.view-button').css('border', '1px solid rgb(184, 88, 88)');
     $('.delete-button').css('background-color', 'rgb(255, 87, 87)');
@@ -183,52 +190,61 @@ $('#view_all_button').on('click', function() {
 
 
   function viewTask(id) {
-    
-  let isExitButtonAttached = false;  // Flag to track if the event listener is already attached
-
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    let task = tasks.find(task => task.id === id);
+    let isExitButtonAttached = false;
   
-    if (task) {
-      let popupContainer = document.createElement('div');
-      popupContainer.id = 'taskPopupContainer';
+    $.ajax({
+      type: 'GET',
+      url: `/api/view/${id}`, // Define the endpoint on the server to fetch a single task by ID
+      success: function (task) {
+        if (task) {
+          let popupContainer = document.createElement('div');
+          popupContainer.id = 'taskPopupContainer';
   
-      let popupContent = document.createElement('div');
-      popupContent.id = 'taskPopupContent';
-      popupContent.innerHTML = `
-      <div style="text-align: center; margin-top: 10px;">
-        <h3>${task.name}</h3>
-        <p>${task.details}</p>
-        <p>Due Date: ${task.dueDate}</p>
-        <p>Priority: ${task.priority}</p>
-        <p>Category: ${task.category}<br><br></p>
-        <button class="edit-button" data-task-id="${task.id}" style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">Edit</button>
-        <button class="close-button" style="background-color: #f44336; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">Close</button>
-        </div>
-      `;
+          let popupContent = document.createElement('div');
+          popupContent.id = 'taskPopupContent';
+          popupContent.innerHTML = `
+            <div style="text-align: center; margin-top: 10px;">
+              <p>${task.task_status}</p>
+              <h3>${task.task_name}</h3>
+              <p>${task.task_details}</p>
+              <p>Due Date: ${task.task_due_date}</p>
+              <p>Priority: ${task.task_priority}</p>
+              <p>Category: ${task.task_category}<br><br></p>
+              <button class="edit-button" data-task-id="${task._id}" style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">Edit</button>
+              <button class="close-button" style="background-color: #f44336; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">Close</button>
+            </div>
+          `;
   
-      popupContainer.innerHTML = popupContent.innerHTML;
-      document.body.appendChild(popupContainer);
+          popupContainer.innerHTML = popupContent.innerHTML;
+          document.body.appendChild(popupContainer);
   
-      document.body.classList.add('popup-open');
+          document.body.classList.add('popup-open');
   
-      $('.edit-button').on('click', function() {
-        let taskId = parseInt($(this).attr('data-task-id'));
-        editTask(taskId);
-      });
+          $('.edit-button').on('click', function () {
+            let taskId = $(this).attr('data-task-id');
+            editTask(taskId);
+          });
   
-      $('.close-button').on('click', function() {
+          $('.close-button').on('click', function () {
+            closePopup();
+          });
+        }
+      },
+      error: function (error) {
+        console.error('Error fetching task details:', error);
+        // Handle any errors that may occur during fetching task details
+      }
+    });
+  
+    // Check if the event listener is already attached before adding it
+    if (!isExitButtonAttached) {
+      $('.close-button').on('click', function () {
         closePopup();
       });
+      isExitButtonAttached = true;
     }
-     // Check if the event listener is already attached before adding it
-  if (!isExitButtonAttached) {
-    $('.close-button').on('click', function() {
-      closePopup();
-    });
-    isExitButtonAttached = true;
   }
-  }
+  
     
   function closePopup() {
     document.getElementById('taskPopupContainer').remove();
@@ -322,48 +338,58 @@ $('#view_all_button').on('click', function() {
   });
 
 
-  function showAllTasks(tasks) {
-    tasks = tasks || JSON.parse(localStorage.getItem('tasks')) || [];
-    let taskList = '';
-
-    for (let task of tasks) {
-      taskList += `
-        <div style="text-align: center;">
-          <h3>${task.name}</h3>
-          <p>${task.details}</p>
-          <p>Due date: ${task.dueDate}</p>
-          <p>Priority: ${task.priority}</p>
-          <p>Category: ${task.category}</p>
-        </div>
-        <hr>
-        <br>
-      `;
-    }
-
-    let popupContainer = document.createElement('div');
-    popupContainer.id = 'popupContainer';
-
-    let popupContent = document.createElement('div');
-    popupContent.id = 'taskPopupContent';
-    popupContent.innerHTML = `
-      <h2 style="font-size: 45px; font-family: 'Merriweather'; font-weight: bold;">ALL TASKS<br></h2>
-      <div id="taskListContainer" class="scrollable-content">
-        ${taskList}
-      </div>
-      <button id="exitButton" style="background-color: #f44336; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">Exit</button>
-    `;
-
-    popupContainer.appendChild(popupContent);
-    document.body.appendChild(popupContainer);
-
-    popupContainer.style.display = 'block';
-
-    let exitButton = document.getElementById('exitButton');
-    exitButton.addEventListener('click', function() {
-      popupContainer.style.display = 'none';
+  function showAllTasks() {
+    $.ajax({
+      type: 'GET',
+      url: '/api/view', // Define the endpoint on the server to handle fetching all tasks
+      success: function (tasks) {
+        let taskList = '';
+  
+        for (let task of tasks) {
+          taskList += `
+            <div style="text-align: center;">
+              <p>${task.task_status}</p>
+              <h3>${task.task_name}</h3>
+              <p>${task.task_content}</p>
+              <p>Due date: ${task.task_due_date}</p>
+              <p>Priority: ${task.task_priority}</p>
+              <p>Category: ${task.task_category}</p>
+            </div>
+            <hr>
+            <br>
+          `;
+        }
+  
+        let popupContainer = document.createElement('div');
+        popupContainer.id = 'popupContainer';
+  
+        let popupContent = document.createElement('div');
+        popupContent.id = 'taskPopupContent';
+        popupContent.innerHTML = `
+          <h2 style="font-size: 45px; font-family: 'Merriweather'; font-weight: bold;">ALL TASKS<br></h2>
+          <div id="taskListContainer" class="scrollable-content">
+            ${taskList}
+          </div>
+          <button id="exitButton" style="background-color: #f44336; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">Exit</button>
+        `;
+  
+        popupContainer.appendChild(popupContent);
+        document.body.appendChild(popupContainer);
+  
+        popupContainer.style.display = 'block';
+  
+        let exitButton = document.getElementById('exitButton');
+        exitButton.addEventListener('click', function () {
+          popupContainer.style.display = 'none';
+        });
+      },
+      error: function (error) {
+        console.error('Error fetching tasks:', error);
+        // Handle any errors that may occur during fetching tasks
+      }
     });
   }
-
+  
   $(document).on('click', '#exit_button', function() {
     $('#popupContainer').remove();
   });
