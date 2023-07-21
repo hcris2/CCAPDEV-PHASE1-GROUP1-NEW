@@ -90,6 +90,15 @@ app.post('/api/tasks', async (req, res) => {
     res.status(500).json({ error: 'An error occurred while adding the task' });
   }
 });
+// for displaying tasks
+app.get('/api/tasks/:id', async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+    res.json(task);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching task details', error: error.message });
+  }
+});
 
 // for updating tasks
 // PUT route to update a task by id
