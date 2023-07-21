@@ -13,6 +13,7 @@ mongoose.connect('mongodb://127.0.0.1/MCO1db')
 
 const User = require('./models/User.js')
 const Task = require('./models/Task.js');
+const Plan = require('./models/Plan.js');
 
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
@@ -125,6 +126,24 @@ app.delete('/api/tasks/:id', async (req, res) => {
   }
  });
 
+// Inside the server-side POST endpoint for task creation
+app.post('/api/create', async (req, res) => {
+  try {
+    const { name, details, dueDate, priority, category } = req.body;
+    const task = new Task({ name, details, dueDate, priority, category });
+    const validationErrors = task.validateSync(); // Validate the task object
+    if (validationErrors) {
+      // If validation fails, return the errors in the response
+      const errors = Object.values(validationErrors.errors).map((err) => err.message);
+      return res.status(400).json({ errors });
+    }
+    await task.save();
+    res.status(201).json(task);
+  } catch (error) {
+    console.error('An error occurred while adding the task:', error);
+    res.status(500).json({ error: 'An error occurred while adding the task' });
+  }
+});
 
 /* -------------------------------------------------------------------------------------- */
 app.get('/',  (req,res) => {

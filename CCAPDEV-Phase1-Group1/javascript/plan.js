@@ -3,7 +3,6 @@ $(document).ready(function() {
     event.preventDefault();
 
     const task = {
-      id: Date.now(),
       name: document.getElementById('task_name').value,
       details: document.getElementById('task_details').value,
       dueDate: document.getElementById('task_due_date').value,
@@ -11,16 +10,23 @@ $(document).ready(function() {
       category: document.getElementById('task_category').value
     };
 
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    tasks.push(task);
-
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-    alert('Task added');
-    showTasks();
-    updateCalendar();
-    document.getElementById('task_form').reset();
+    $.ajax({
+      type: 'POST',
+      url: '/api/create',
+      data: task, // Corrected to use the task object
+      success: function(response) {
+        // Task creation successful
+        alert('Task added');
+        showTasks();
+        updateCalendar();
+        document.getElementById('task_form').reset();
+      },
+      error: function(error) {
+        console.error('Error adding task:', error);
+        alert('An error occurred while adding the task.');
+      }
+    });
   });
-
     $(document).on('click', '#cancel_edit_button', function(event) {
     event.preventDefault();
     closeEditContainer();
@@ -28,38 +34,54 @@ $(document).ready(function() {
 
   $('#logout_button').on('click', function(event) {
     event.preventDefault();
-    localStorage.removeItem('loggedIn');
-    window.location.href = 'index.html';
-  });
-
-  document.getElementById('logout_button').addEventListener('click', function() {
-    localStorage.clear();
-    window.location.href = 'register.html';
-  });
-
-  $('#search_form').on('submit', function(event) {
-    event.preventDefault();
-    const searchQuery = $('#search_input').val().toLowerCase();
-
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    let filteredTasks = tasks.filter(task => {
-      const dueDate = task.dueDate.toLowerCase();
-      const priority = task.priority.toLowerCase();
-      const details = task.details.toLowerCase();
-
-      return (
-        dueDate.includes(searchQuery) ||
-        priority.includes(searchQuery) ||
-        details.includes(searchQuery)
-      );
+  
+    // Make an HTTP request to the server to handle logout
+    $.ajax({
+      type: 'POST',
+      url: '/api/logout', // Define the endpoint on the server to handle logout
+      success: function(response) {
+        console.log('Logout successful:', response);
+        window.location.href = 'index.html';
+      },
+      error: function(error) {
+        console.error('Error during logout:', error);
+        // Handle any errors that may occur during logout
+      }
     });
-
-    showTasks(filteredTasks);
   });
+  
 
-  $('#view_all_button').on('click', function() {
-    showTasks();
+ $('#search_form').on('submit', function(event) {
+  event.preventDefault();
+  const searchQuery = $('#search_input').val().toLowerCase();
+
+  $.ajax({
+    type: 'GET',
+    url: `/api/search?search=${searchQuery}`, // Define the endpoint on the server to handle the search
+    success: function(response) {
+      showTasks(response);
+    },
+    error: function(error) {
+      console.error('Error during search:', error);
+      // Handle any errors that may occur during search
+    }
   });
+});
+
+$('#view_all_button').on('click', function() {
+  $.ajax({
+    type: 'GET',
+    url: '/api/view', // Define the endpoint on the server to handle fetching all tasks
+    success: function(response) {
+      showTasks(response);
+    },
+    error: function(error) {
+      console.error('Error fetching tasks:', error);
+      // Handle any errors that may occur during fetching tasks
+    }
+  });
+});
+
 
   $('#category_form').on('submit', function(event) {
     event.preventDefault();
