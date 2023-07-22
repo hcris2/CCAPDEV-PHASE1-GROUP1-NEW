@@ -13,7 +13,9 @@ mongoose.connect('mongodb://127.0.0.1/MCO1db')
 
 const User = require('./models/User.js')
 const Task = require('./models/Task.js');
-const Plan = require('./models/Plan.js');
+const Notif = require('./models/Notif.js');
+
+
 
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
@@ -184,6 +186,117 @@ app.get('/api/view/:id', async (req, res) => {
     res.status(500).json({ error: 'An error occurred while fetching task details' });
   }
 });
+
+app.post('/api/categories', async (req, res) => {
+  const { name } = req.body;
+
+  try {
+    const newCategory = await Notif.create({ category_name: name });
+
+    res.status(201).json(newCategory);
+  } catch (error) {
+    console.error('Error adding category:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/api/categories', (req, res) => {
+  const { name } = req.body;
+  const newCategory = { id: categories.length + 1, name };
+  categories.push(newCategory);
+  res.status(201).json(newCategory);
+});
+
+app.put('/api/categories/:categoryId', async (req, res) => {
+  const categoryId = req.params.categoryId;
+  const { name } = req.body;
+
+  try {
+    const category = await Notif.findByIdAndUpdate(
+      categoryId,
+      { category_name: name },
+      { new: true } 
+    );
+    if (!category) {
+      return res.status(404).json({ error: 'Category not found' });
+    }
+    res.json(category);
+  } catch (error) {
+    console.error('Error updating category:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.delete('/api/categories/:categoryId', async (req, res) => {
+  const categoryId = req.params.categoryId;
+
+  try {
+    // Find and remove the category by ID from the database
+    const category = await Notif.findByIdAndRemove(categoryId);
+
+    if (!category) {
+      return res.status(404).json({ error: 'Category not found' });
+    }
+
+    res.json(category);
+  } catch (error) {
+    console.error('Error deleting category:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get('/api/notifications', async (req, res) => {
+  try {
+    const notifications = await Notif.find();
+    res.json(notifications);
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Update a notification by its ID
+app.put('/api/notifications/:notificationId', async (req, res) => {
+  const notificationId = req.params.notificationId;
+  const { title, body, date } = req.body;
+
+  try {
+    const updatedNotification = await Notif.findByIdAndUpdate(
+      notificationId,
+      { title, body, date },
+      { new: true } // Return the updated notification
+    );
+
+    if (!updatedNotification) {
+      return res.status(404).json({ error: 'Notification not found' });
+    }
+
+    res.json(updatedNotification);
+  } catch (error) {
+    console.error('Error updating notification:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Delete a notification by its ID
+app.delete('/api/notifications/:notificationId', async (req, res) => {
+  const notificationId = req.params.notificationId;
+
+  try {
+    const deletedNotification = await Notif.findByIdAndRemove(notificationId);
+
+    if (!deletedNotification) {
+      return res.status(404).json({ error: 'Notification not found' });
+    }
+
+    res.json(deletedNotification);
+  } catch (error) {
+    console.error('Error deleting notification:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
 /* -------------------------------------------------------------------------------------- */
 app.get('/',  (req,res) => {
     const indexPath = path.join(__dirname, 'index.html');
