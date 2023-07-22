@@ -35,6 +35,40 @@ $(document).ready(async function() {
       alert('An error occurred while adding the task.');
     }
   });
+
+  
+
+  $('#notification_form').on('submit', async function(event) {
+    event.preventDefault();
+  
+    const notification = {
+      title: document.getElementById('notification_title').value,
+      body: document.getElementById('notification_body').value,
+      date: document.getElementById('notification_date').value,
+    };
+  
+    try {
+      const response = await fetch('/api/notifications', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(notification),
+      });
+  
+      if (response.ok) {
+        alert('Notification added successfully!');
+        showNotifications(); // Refresh the notification list after adding the new notification
+        document.getElementById('notification_form').reset(); // Reset the form
+      } else {
+        console.error('Failed to add notification:', response.statusText);
+        alert('An error occurred while adding the notification.');
+      }
+    } catch (error) {
+      console.error('Error adding notification:', error);
+      alert('An error occurred while adding the notification.');
+    }
+  });
   
     $(document).on('click', '#cancel_edit_button', function(event) {
     event.preventDefault();
@@ -47,10 +81,10 @@ $(document).ready(async function() {
     // Make an HTTP request to the server to handle logout
     $.ajax({
       type: 'POST',
-      url: '/api/logout', // Define the endpoint on the server to handle logout
+      url: '/api/logout', // Use the new endpoint for logout
       success: function(response) {
         console.log('Logout successful:', response);
-        window.location.href = 'index.html';
+        window.location.href = 'index.html'; // Redirect to the homepage after logout
       },
       error: function(error) {
         console.error('Error during logout:', error);
@@ -58,7 +92,6 @@ $(document).ready(async function() {
       }
     });
   });
-  
 
  $('#search_form').on('submit', function(event) {
   event.preventDefault();
@@ -92,38 +125,31 @@ $('#view_all_button').on('click', function() {
 });
 
 
-  $('#category_form').on('submit', function(event) {
-    event.preventDefault();
-    const category = document.getElementById('category_name').value;
-  
-    let categories = JSON.parse(localStorage.getItem('categories')) || [];
-    categories.push(category);
-  
-    localStorage.setItem('categories', JSON.stringify(categories));
-    alert('Category added');
-    showCategories();
-  });
+$('#category_form').on('submit', async function(event) {
+  event.preventDefault();
+  const category = document.getElementById('category_name').value;
 
-  $('#notification_form').on('submit', function(event) {
-    event.preventDefault();
-    const title = document.getElementById('notification_title').value;
-    const body = document.getElementById('notification_body').value;
-    const date = document.getElementById('notification_date').value;
+  try {
+    const response = await fetch('/api/categories', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: category }), // Use 'name' instead of 'title'
+    });
 
-    const notification = {
-      id: Date.now(),
-      title: title,
-      body: body,
-      date: date
-    };
+    if (response.ok) {
+      showCategories();
+      document.getElementById('category_form').reset(); // Reset the form after adding the category
+    } else {
+      console.error('Failed to add category:', response.status, response.statusText);
+    }
+  } catch (error) {
+    console.error('Error adding category:', error);
+  }
 
-    let notifications = JSON.parse(localStorage.getItem('notifications')) || [];
-    notifications.push(notification);
-
-    localStorage.setItem('notifications', JSON.stringify(notifications));
-    alert('Notification set');
-    showNotifications();
-  });
+  alert('Category added')
+});
 
 async function showTasks() {
   try {
@@ -511,8 +537,6 @@ async function updateCalendar() {
 
 
   document.getElementById('add_category_button').addEventListener('click', async () => {
-    const newCategory = prompt('Enter the name for the new category:');
-  
     if (newCategory !== null && newCategory.trim() !== '') {
       try {
         const response = await fetch('/api/categories', {
@@ -524,8 +548,6 @@ async function updateCalendar() {
         });
   
         if (response.ok) {
-          // The category was successfully added to the database
-          showCategories();
         } else {
           console.error('Failed to add category:', response.status, response.statusText);
         }
@@ -535,157 +557,220 @@ async function updateCalendar() {
     }
   });
   
-  async function showCategories() {
-    let categoryList = $('#category_list');
-    categoryList.empty();
-  
-    try {
-      const categories = await Notif.find().select('category_name'); // Assuming you want to fetch only the category_name from the database
-      for (let category of categories) {
-        let div = $('<div></div>');
-        div.attr('id', `category_${category._id}`); // Assuming the category has an '_id' property (generated by MongoDB)
-        div.html(`
-          <h3>${category.category_name}</h3>
-          <button class="edit-button" data-category-id="${category._id}">Edit</button>
-          <button class="delete-button" data-category-id="${category._id}">Delete</button>
-        `);
-  
-        div.css('border-bottom', '1px solid rgb(214, 214, 214)');
-        div.css('padding-bottom', '10px');
-        div.css('border-radius', '5px');
-        categoryList.append(div);
-      }
-    } catch (error) {
-      console.error('Error fetching categories:', error);
+// Function to fetch and display all categories
+async function showCategories() {
+  let categoryList = $('#category_list');
+  categoryList.empty();
+
+  try {
+    const response = await fetch('/api/categories'); // Fetch categories from the API
+    const categories = await response.json();
+
+    for (let category of categories) {
+      let div = $('<div></div>');
+      div.attr('id', `category_${category._id}`);
+      div.html(`
+        <h3>${category.title}</h3>
+        <button class="edit-button" data-category-id="${category._id}">Edit</button>
+        <button class="delete-button" data-category-id="${category._id}">Delete</button>
+      `);
+
+      div.css('border-bottom', '1px solid rgb(214, 214, 214)');
+      div.css('padding-bottom', '10px');
+      div.css('border-radius', '5px');
+      categoryList.append(div);
     }
-  
+
+    categoryList.off('click', '.edit-button')
     // Add event listeners for edit and delete buttons
     categoryList.on('click', '.edit-button', function (event) {
       event.stopPropagation();
       let categoryId = $(this).attr('data-category-id');
       editCategory(categoryId);
     });
-  
+    
+    categoryList.off('click', '.delete-button')
     categoryList.on('click', '.delete-button', function (event) {
       event.stopPropagation();
       let categoryId = $(this).attr('data-category-id');
       deleteCategory(categoryId);
     });
-  }
-
-  async function editCategory(category) {
-    let newCategory = prompt('Enter a new name for the category:', category);
-  
-    if (newCategory !== null && newCategory.trim() !== '') {
-      try {
-        const response = await fetch(`/api/categories/${encodeURIComponent(category)}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ name: newCategory }),
-        });
-  
-        if (response.ok) {
-          showCategories();
-        } else {
-          console.error('Failed to update category:', response.status, response.statusText);
-        }
-      } catch (error) {
-        console.error('Error updating category:', error);
-      }
-    }
-  }
-  
-
-  async function deleteCategory(category) {
-    if (confirm(`Are you sure you want to delete the category "${category}"?`)) {
-      try {
-        const response = await fetch(`/api/categories/${encodeURIComponent(category)}`, {
-          method: 'DELETE',
-        });
-        if (response.ok) {
-          showCategories();
-        } else {
-          console.error('Failed to delete category:', response.status, response.statusText);
-        }
-      } catch (error) {
-        console.error('Error deleting category:', error);
-      }
-    }
-  }
-
-async function showNotifications() {
-  try {
-    const response = await fetch('/api/notifications'); // Fetch notifications from the API
-    const notifications = await response.json();
-
-    let notificationList = $('#notification_list');
-    notificationList.empty();
-
-    for (let notification of notifications) {
-      let div = $('<div></div>');
-      div.attr('id', `notification_${notification._id}`);
-      div.html(`
-        <h3>${notification.title}</h3>
-        <p>${notification.body}</p>
-        <p>${notification.date}</p>
-        <button class="edit-button" data-notification-id="${notification._id}">Edit</button>
-        <button class="delete-button" data-notification-id="${notification._id}">Delete</button>
-      `);
-
-      div.css('border-bottom', '1px solid rgb(214, 214, 214)');
-      div.css('padding-bottom', '10px');
-      div.css('border-radius', '5px');
-
-      notificationList.append(div);
-    }
-
-    // Add event listeners for edit and delete buttons
-    notificationList.on('click', '.edit-button', function(event) {
-      event.stopPropagation();
-      let notificationId = $(this).attr('data-notification-id');
-      editNotification(notificationId);
-    });
-
-    notificationList.on('click', '.delete-button', function(event) {
-      event.stopPropagation();
-      let notificationId = $(this).attr('data-notification-id');
-      deleteNotification(notificationId);
-    });
   } catch (error) {
-    console.error('Error fetching notifications:', error);
+    console.error('Error fetching categories:', error);
   }
 }
 
+// Function to edit a category
+async function editCategory(categoryId) {
+  let categoryElement = $(`#category_${categoryId} h3`);
+  let newCategoryName = prompt('Enter a new name for the category:', categoryElement.text());
+
+  if (newCategoryName !== null && newCategoryName.trim() !== '') {
+    try {
+      const response = await fetch(`/api/categories/${categoryId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: newCategoryName }),
+      });
+
+      if (response.ok) {
+        categoryElement.text(newCategoryName);
+      } else {
+        console.error('Failed to update category:', response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error('Error updating category:', error);
+    }
+  }
+}
+  
+// Function to delete a category
+async function deleteCategory(categoryId) {
+  if (confirm(`Are you sure you want to delete this category?`)) {
+    try {
+      const response = await fetch(`/api/categories/${categoryId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        $(`#category_${categoryId}`).remove();
+      } else {
+        console.error('Error deleting category:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error deleting category:', error);
+    }
+  }
+}
+
+  
+
+
+  async function showNotifications() {
+    try {
+      const response = await fetch('/api/notifications'); // Fetch notifications from the API
+      const notifications = await response.json();
+  
+      let notificationList = $('#notification_list');
+      notificationList.empty();
+  
+      for (let notification of notifications) {
+        let div = $('<div></div>');
+        div.attr('id', `notification_${notification._id}`);
+        div.html(`
+          <h3>${notification.title}</h3>
+          <p>${notification.body}</p>
+          <p>${notification.date}</p>
+          <button class="edit-button" data-notification-id="${notification._id}">Edit</button>
+          <button class="delete-button" data-notification-id="${notification._id}">Delete</button>
+        `);
+  
+        div.css('border-bottom', '1px solid rgb(214, 214, 214)');
+        div.css('padding-bottom', '10px');
+        div.css('border-radius', '5px');
+  
+        notificationList.append(div);
+      }
+      
+    notificationList.off('click', '.edit-button');
+      // Add event listeners for edit and delete buttons
+      notificationList.on('click', '.edit-button', function(event) {
+        event.stopPropagation();
+        let notificationId = $(this).attr('data-notification-id');
+        editNotification(notificationId);
+      });
+      
+    notificationList.off('click', '.delete-button');
+      notificationList.on('click', '.delete-button', function(event) {
+        event.stopPropagation();
+        let notificationId = $(this).attr('data-notification-id');
+        deleteNotification(notificationId);
+      });
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
+  }
+
 // Function to edit a notification
 async function editNotification(id) {
-  // Get new data for the notification from the user
-  let newTitle = prompt('Enter a new title for the notification:');
-  let newBody = prompt('Enter a new body for the notification:');
-  let newDate = prompt('Enter a new date for the notification:');
-
   try {
+    const response = await fetch(`/api/notifications/${id}`);
+    const notification = await response.json();
+    if (!notification) {
+      return alert('Notification not found');
+    }
+
+    let popupContainer = document.createElement('div');
+    popupContainer.id = 'notificationPopupContainer';
+
+    let popupContent = document.createElement('div');
+    popupContent.id = 'notificationPopupContent';
+    popupContent.innerHTML = `
+      <div style="text-align: center; margin-top: 10px;">
+        <h3>Edit Notification</h3>
+        <label for="edit_notification_title">Title:</label>
+        <input type="text" id="edit_notification_title" value="${notification.title}" required>
+        <label for="edit_notification_body">Body:</label>
+        <textarea id="edit_notification_body" required>${notification.body}</textarea>
+        <label for="edit_notification_date">Date:</label>
+        <input type="datetime-local" id="edit_notification_date" value="${notification.date}" required><br><br>
+        <button class="save-button" data-notification-id="${notification._id}" style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">Save</button>
+        <button class="cancel-button" style="background-color: #f44336; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">Cancel</button>
+      </div>
+    `;
+    document.body.classList.add('popup-open');
+
+    popupContent.querySelector('.save-button').addEventListener('click', function () {
+      saveEditedNotification(id);
+    });
+
+    popupContent.querySelector('.cancel-button').addEventListener('click', function () {
+      closePopup();
+    });
+
+    popupContainer.appendChild(popupContent);
+    document.body.appendChild(popupContainer);
+
+  } catch (error) {
+    console.error('Error fetching notification details for editing:', error);
+    alert('An error occurred while fetching notification details for editing');
+  }
+}
+
+function closePopup() {
+  document.getElementById('notificationPopupContainer').remove();
+  document.body.classList.remove('popup-open');
+}
+
+async function saveEditedNotification(id) {
+  try {
+    const notification = {
+      title: document.getElementById('edit_notification_title').value,
+      body: document.getElementById('edit_notification_body').value,
+      date: document.getElementById('edit_notification_date').value,
+    };
+
     const response = await fetch(`/api/notifications/${id}`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        title: newTitle,
-        body: newBody,
-        date: newDate,
-      }),
+      body: JSON.stringify(notification)
     });
 
     if (response.ok) {
-      console.log('Notification edited successfully.');
-      showNotifications();
+      alert('Notification updated');
+      closePopup();
+      showNotifications(); // Refresh the notification list after updating the notification
     } else {
-      console.error('Error editing notification:', response.statusText);
+      console.error('Failed to update notification:', response.statusText);
+      alert('An error occurred while updating the notification.');
     }
   } catch (error) {
-    console.error('Error editing notification:', error);
+    console.error('Error updating notification:', error);
+    alert('An error occurred while updating the notification.');
   }
 }
 

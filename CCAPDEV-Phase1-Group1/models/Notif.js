@@ -4,20 +4,16 @@ const mongoose = require('mongoose');
 
 
 const notifSchema = new mongoose.Schema({
-    category_name: {
+    title: {
       type: String,
       required: true
     },
-    notification_title: {
+    body: {
       type: String,
       required: true
     },
-    notification_body: {
-      type: String,
-      required: true
-    },
-    notification_date: {
-      type: String,
+    date: {
+      type: Date,
       required: true
     }
   });

@@ -775,3 +775,15 @@ background-color: rgb(248, 65, 65);
 .delete-button:hover{
   background-color: rgb(248, 65, 65);
 }
+
+#notificationPopupContainer {
+  position: fixed;
+  top: 50%; /* Set the top position to 50% of the screen height */
+  left: 50%; /* Set the left position to 50% of the screen width */
+  transform: translate(-50%, -50%); /* Use translate to center the container */
+  z-index: 9999; /* Set a high z-index to make sure it appears above other elements */
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding: 20px;
+}

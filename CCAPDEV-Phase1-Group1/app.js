@@ -14,6 +14,7 @@ mongoose.connect('mongodb://127.0.0.1/MCO1db')
 const User = require('./models/User.js')
 const Task = require('./models/Task.js');
 const Notif = require('./models/Notif.js');
+const Categ = require('./models/Categ.js');
 
 
 
@@ -57,6 +58,7 @@ app.post('/api/login', async (req, res) => {
    }
 });
 
+
 // for loading tasks
 app.get('/api/tasks', async (req, res) => {
   try {
@@ -73,6 +75,7 @@ app.post('/api/tasks', async (req, res) => {
   try {
     // Extract the task data from the request body
     const { task_status, task_name, task_content, task_date, task_priority, task_category } = req.body;
+    
 
     // Create a new task document
     const task = new Task({
@@ -187,11 +190,12 @@ app.get('/api/view/:id', async (req, res) => {
   }
 });
 
+//add a new category
 app.post('/api/categories', async (req, res) => {
   const { name } = req.body;
 
   try {
-    const newCategory = await Notif.create({ category_name: name });
+    const newCategory = await Categ.create({ title: name });
 
     res.status(201).json(newCategory);
   } catch (error) {
@@ -200,50 +204,61 @@ app.post('/api/categories', async (req, res) => {
   }
 });
 
-app.post('/api/categories', (req, res) => {
-  const { name } = req.body;
-  const newCategory = { id: categories.length + 1, name };
-  categories.push(newCategory);
-  res.status(201).json(newCategory);
+
+//view category
+app.get('/api/categories', async (req, res) => {
+  try {
+    const categories = await Categ.find();
+    res.status(200).json(categories);
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
+//edit category
 app.put('/api/categories/:categoryId', async (req, res) => {
   const categoryId = req.params.categoryId;
   const { name } = req.body;
 
   try {
-    const category = await Notif.findByIdAndUpdate(
+    const updatedCategory = await Categ.findByIdAndUpdate(
       categoryId,
-      { category_name: name },
-      { new: true } 
+      { title: name },
+      { new: true }
     );
-    if (!category) {
+
+    if (!updatedCategory) {
       return res.status(404).json({ error: 'Category not found' });
     }
-    res.json(category);
+
+    res.json(updatedCategory);
   } catch (error) {
     console.error('Error updating category:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
 
+//delete category
 app.delete('/api/categories/:categoryId', async (req, res) => {
   const categoryId = req.params.categoryId;
 
   try {
-    // Find and remove the category by ID from the database
-    const category = await Notif.findByIdAndRemove(categoryId);
+    const deletedCategory = await Categ.findByIdAndRemove(categoryId);
 
-    if (!category) {
+    if (!deletedCategory) {
       return res.status(404).json({ error: 'Category not found' });
     }
 
-    res.json(category);
+    res.json(deletedCategory);
   } catch (error) {
     console.error('Error deleting category:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+
+
 
 app.get('/api/notifications', async (req, res) => {
   try {
@@ -255,17 +270,49 @@ app.get('/api/notifications', async (req, res) => {
   }
 });
 
+app.get('/api/notifications/:notificationId', async (req, res) => {
+  try{
+    const notif = await Notif.findById(req.params.notificationId);
+    res.json(notif);
+  }
+
+  catch(error){
+    res.status(500).json({ error: 'Error' });
+  }
+
+
+});
+
+
+// Add a new notification
+app.post('/api/notifications', async (req, res) => {
+  try {
+    
+    const { title, body, date } = req.body;
+    const newNotification = new Notif({
+      title,
+      body,
+      date,
+    });
+
+    await newNotification.save();
+    res.json(newNotification);
+  } catch (error) {
+    console.error('Error adding notification:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Update a notification by its ID
 app.put('/api/notifications/:notificationId', async (req, res) => {
   const notificationId = req.params.notificationId;
   const { title, body, date } = req.body;
-
   try {
     const updatedNotification = await Notif.findByIdAndUpdate(
       notificationId,
       { title, body, date },
-      { new: true } // Return the updated notification
-    );
+      { new: true } 
+    );;
 
     if (!updatedNotification) {
       return res.status(404).json({ error: 'Notification not found' });
@@ -295,6 +342,12 @@ app.delete('/api/notifications/:notificationId', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+
+
+
+
+
 
 
 /* -------------------------------------------------------------------------------------- */

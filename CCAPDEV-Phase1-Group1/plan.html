@@ -96,10 +96,37 @@
         </form>
         <div id="notification_list"></div>
       </div>
+      
+      <div id="editNotificationContainer" style="display: none;"></div>   
+
     </div>
   </div>
 
+  <script>
+    function logout() {
+        localStorage.removeItem('loggedIn');
+        window.location.href = 'index.html';
+    }
 
+    function checkAuthentication() {
+        const isLoggedIn = localStorage.getItem('loggedIn');
+
+        if (isLoggedIn !== 'true') {
+            alert('Please log in to access the plan page.');
+            window.location.href = 'index.html';
+        }
+    }
+
+    function redirectToTaskPage() {
+        const isLoggedIn = localStorage.getItem('loggedIn');
+
+        if (isLoggedIn === 'true') {
+            window.location.href = 'plan.html';
+        } else {
+            alert('Please register and log in to access the task page.');
+        }
+    }
+</script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
