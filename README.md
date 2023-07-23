@@ -15,7 +15,7 @@ Ensure that the following are installed on your system:
 2. Navigate to the directory of app.js in your terminal
    
 3. Start the server
-   Run 'node app.js'
+   - Run 'node app.js'
    
 4. Visit the website
-   Enter 'http://localhost:3000/' to visit the website.
+   - Enter 'http://localhost:3000/' to visit the website.
