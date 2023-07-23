@@ -16,6 +16,11 @@ const Task = require('./models/Task.js');
 const Notif = require('./models/Notif.js');
 const Categ = require('./models/Categ.js');
 
+const taskRouter = require('./routes/task_route.js');
+const notifRouter = require('./routes/notif_route.js');
+app.use('/api/task', taskRouter);
+app.use('/api/notif', notifRouter);
+
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
@@ -41,7 +46,7 @@ app.post('/api/users', async (req, res) => {
 
 
   // for logging in
-  app.post('/api/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
     try{
      const user = await User.findOne({username:req.body.username})
      if(!user){
@@ -56,108 +61,6 @@ app.post('/api/users', async (req, res) => {
     }
  });
  
-
-
-// for loading tasks
-app.get('/api/tasks', async (req, res) => {
-  try {
-    const tasks = await Task.find();
-    res.status(200).json(tasks);
-  } catch (error) {
-    console.error('An error occurred while retrieving tasks:', error);
-    res.status(500).json({ error: 'An error occurred while retrieving tasks' });
-  }
-});
-
-
-app.post('/api/tasks', async (req, res) => {
-  try {
-    // Extract the task data from the request body
-    const { task_status, task_name, task_content, task_date, task_priority, task_category } = req.body;
-    
-
-    // Create a new task document
-    const task = new Task({
-      task_status,
-      task_name,
-      task_content,
-      task_date,
-      task_priority,
-      task_category
-    });
-
-    // Save the task to the database
-    await task.save();
-
-    res.status(201).json(task); // Return the created task as the API response
-  } catch (error) {
-    console.error('An error occurred while adding the task:', error);
-    res.status(500).json({ error: 'An error occurred while adding the task' });
-  }
-});
-// for displaying tasks
-app.get('/api/tasks/:id', async (req, res) => {
-  try {
-    const task = await Task.findById(req.params.id);
-    res.json(task);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching task details', error: error.message });
-  }
-});
-
-// for updating tasks
-// PUT route to update a task by id
-app.patch('/api/tasks/:id', async (req, res) => {
-  const taskId = req.params.id;
-  const updatedTaskData = req.body;
-
-  try {
-    // Find the task by id and update it in the database
-    const updatedTask = await Task.findByIdAndUpdate(taskId, updatedTaskData, {
-      new: true, // Return the updated task
-    });
-
-    res.json(updatedTask);
-  } catch (error) {
-    console.error('Error updating task:', error);
-    res.status(500).json({ error: 'An error occurred while updating the task' });
-  }
-});
-
-//for deleting tasks
-app.delete('/api/tasks/:id', async (req, res) => {
-  const taskId = req.params.id;
-
-  try {
-    // Find the task by id and delete it in the database
-    const deletedTask = await Task.findByIdAndRemove(taskId);
-
-    res.json(deletedTask);
-  } catch (error) {
-    console.error('Error deleting task:', error);
-    res.status(500).json({ error: 'An error occurred while deleting the task' });
-  }
- });
-
-// Inside the server-side POST endpoint for task creation
-app.post('/api/plans', async (req, res) => {
-  try {
-    const { task_name, task_details, task_due_date, task_priority, task_category } = req.body;
-    const task = new Plan({ task_name, task_details, task_due_date, task_priority, task_category });
-    const validationErrors = task.validateSync(); // Validate the task object
-    
-    if (validationErrors) {
-      const errors = Object.values(validationErrors.errors).map((err) => err.message);
-      return res.status(400).json({ errors });
-      
-    }
-    await task.save();
-    res.status(201).json(task);
-  } catch (error) {
-    console.error('An error occurred while adding the task:', error);
-    res.status(500).json({ error: 'An error occurred while adding the task' });
-  }
-});
 
 app.get('/api/view', async (req, res) => {
   try {
@@ -255,99 +158,6 @@ app.delete('/api/categories/:categoryId', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
-
-
-
-app.get('/api/notifications', async (req, res) => {
-  try {
-    const notifications = await Notif.find();
-    res.json(notifications);
-  } catch (error) {
-    console.error('Error fetching notifications:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-app.get('/api/notifications/:notificationId', async (req, res) => {
-  try{
-    const notif = await Notif.findById(req.params.notificationId);
-    res.json(notif);
-  }
-
-  catch(error){
-    res.status(500).json({ error: 'Error' });
-  }
-
-
-});
-
-
-// Add a new notification
-app.post('/api/notifications', async (req, res) => {
-  try {
-    
-    const { title, body, date } = req.body;
-    const newNotification = new Notif({
-      title,
-      body,
-      date,
-    });
-
-    await newNotification.save();
-    res.json(newNotification);
-  } catch (error) {
-    console.error('Error adding notification:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-// Update a notification by its ID
-app.put('/api/notifications/:notificationId', async (req, res) => {
-  const notificationId = req.params.notificationId;
-  const { title, body, date } = req.body;
-  try {
-    const updatedNotification = await Notif.findByIdAndUpdate(
-      notificationId,
-      { title, body, date },
-      { new: true } 
-    );;
-
-    if (!updatedNotification) {
-      return res.status(404).json({ error: 'Notification not found' });
-    }
-
-    res.json(updatedNotification);
-  } catch (error) {
-    console.error('Error updating notification:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-// Delete a notification by its ID
-app.delete('/api/notifications/:notificationId', async (req, res) => {
-  const notificationId = req.params.notificationId;
-
-  try {
-    const deletedNotification = await Notif.findByIdAndRemove(notificationId);
-
-    if (!deletedNotification) {
-      return res.status(404).json({ error: 'Notification not found' });
-    }
-
-    res.json(deletedNotification);
-  } catch (error) {
-    console.error('Error deleting notification:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-
-
-
-
-
-
 
 /* -------------------------------------------------------------------------------------- */
 app.get('/',  (req,res) => {
