@@ -24,4 +24,22 @@ Ensure that the following are installed on your system:
 You can register a username and password to log-in and access the Plan and Task pages.
 
 Alternatively, you can import the users from the USERS_HASHED.json file to log-in with the following 5 combinations:
-* username: judilee
+1) User 1:
+  * judilee
+  * testPassword1
+    
+2) User 2:
+   * jerome
+   * testPassword2
+
+3) User 3:
+   * marc
+   * testPassword3
+
+4) User 4:
+   * username4
+   * testPassword4
+
+5) User 5:
+   * username5
+   * testPassword5
