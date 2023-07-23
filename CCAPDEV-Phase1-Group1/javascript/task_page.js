@@ -71,7 +71,7 @@ function addTaskEntry() {
     <div class="task_status"> <i class="fa-solid fa-bars-progress"></i> Status </div><span class="line">| </span>
     <div class="task_name">  Name  </div> <span class="line">|</span>
     <div class="task_content">  Content </div> <span class="line">|</span>
-    <div class="task_date">  <i class="fa-solid fa-calendar-days fa-sm"></i>   January 1, 1969 </div>  <span class="line">| </span>  
+    <div class="task_date">  <i class="fa-solid fa-calendar-days fa-sm"></i>   July 23, 2023 </div>  <span class="line">| </span>  
     <div class="task_priority"><i class="fa-solid fa-chart-simple fa-xs"></i>  Priority </div> <span class="line">| </span> 
     <div class="task_category"> <i class="fa-solid fa-user fa-sm"></i> Category</div>
   `;
@@ -92,7 +92,7 @@ function addTaskEntry() {
    var taskStatus = "Status"; 
    var taskName = "Name"; 
    var taskContent = "Content"; 
-   var taskDate = "1969-01-01";
+   var taskDate = "2023-07-23";
    var taskPriority = "Priority"; 
    var taskCategory = "Category"; 
  
@@ -136,6 +136,7 @@ function addTaskEntry() {
 
 function displayTask(taskEntry) {
   var taskEntries = document.querySelectorAll('.task_entry');
+  
 
   // Remove the 'selected' class from all task entries
   taskEntries.forEach(function(entry) {
@@ -162,7 +163,7 @@ function displayTask(taskEntry) {
   taskBoxName.textContent = taskName;
   taskBoxContent.textContent = taskContent;
   taskBoxStatus.value = taskStatus;
-  taskBoxDate.value = taskDate;
+  taskBoxDate.value = convertToISODate(taskDate);
   taskBoxPriority.value = taskPriority;
   taskBoxCategory.value = taskCategory;
   
@@ -280,6 +281,14 @@ function updateTaskEntry() {
   }
 }
 
+function convertToISODate(dateString) {
+  var dateObject = new Date(Date.parse(dateString));
+  var year = dateObject.getFullYear();
+  var month = (dateObject.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based, add 1 and pad with 0 if needed
+  var day = dateObject.getDate().toString().padStart(2, '0'); // Pad with 0 if needed
+
+  return year + '-' + month + '-' + day;
+}
 
 
 function convertToDateWorded(dateValue) {

@@ -126,7 +126,7 @@ button{
 }
 
 button:hover{
-  background-color: #8ab48a;
+  background-color: #62dd62;
   transition:all 0.3s ease;
 }
 
@@ -497,6 +497,7 @@ i{
   transform: translate(-50%, -50%);
   background-color: white;
   padding: 20px;
+  margin:20px;
   width: 1000px;
   max-height: 90%;
   border: 2px solid black;
@@ -509,6 +510,7 @@ i{
 #taskPopupContent {
   text-align: center;
   padding: 10px;
+  margin:10px;
   max-height: 1100px; 
   max-width: 1000px;
 }
@@ -557,6 +559,7 @@ i{
   transform: translate(-50%, -50%);
   background-color: white;
   padding: 20px;
+  margin:10px;
   width: 1000px;
   max-height: 90%;
   border: 2px solid black;
@@ -575,7 +578,7 @@ i{
 }
 
 .edit-button{
-  background-color:#A4D0A4 ;
+  background-color: #69fa69
 }
 
 .delete-button{
@@ -583,7 +586,7 @@ background-color:rgb(255, 87, 87) ;
 }
 
 .edit-button:hover{
-background-color:#8ab48a ;
+  background-color: #62dd62;
 }
 
 .delete-button:hover{
@@ -769,11 +772,11 @@ background-color: rgb(248, 65, 65);
 }
 
 .view-button{
-  background-color: #A4D0A4
+  background-color: #69fa69
 }
 
 .view-button:hover{
-  background-color: #8ab48a;
+  background-color: #62dd62;
 }
 
 .delete-button{
