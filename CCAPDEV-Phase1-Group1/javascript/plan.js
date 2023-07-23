@@ -93,23 +93,6 @@ $(document).ready(async function() {
     });
   });
 
- $('#search_form').on('submit', function(event) {
-  event.preventDefault();
-  const searchQuery = $('#search_input').val().toLowerCase();
-
-  $.ajax({
-    type: 'GET',
-    url: `/api/search?search=${searchQuery}`, // Define the endpoint on the server to handle the search
-    success: function(response) {
-      showTasks(response);
-    },
-    error: function(error) {
-      console.error('Error during search:', error);
-      // Handle any errors that may occur during search
-    }
-  });
-});
-
 //-------------------------------------------------------EDIT ZONE----------------------------------------------------------------------
 // Function to handle the search form submission
 $('#search_form').on('submit', async function(event) {
@@ -134,8 +117,8 @@ $('#search_form').on('submit', async function(event) {
         <h3>${task.task_name}</h3>
         <p>Status: ${task.task_status}</p>
         <p>Task Details: ${task.task_content}</p> <!-- Display actual data for "task_content" -->
-        <button>Edit</button>
-        <button>Delete</button>
+        <button class="view-button" data-task-id="${task._id}">View</button>
+        <button class="delete-button" data-task-id="${task._id}">Delete</button>
       `);
 
       div.css('border-bottom', '1px solid rgb(214, 214, 214)');
