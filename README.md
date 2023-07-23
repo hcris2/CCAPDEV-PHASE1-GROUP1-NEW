@@ -23,10 +23,10 @@ Ensure that the following are installed on your system:
 ## Using the website
 You can register a username and password to log-in and access the Plan and Task pages.
 
-Alternatively, you can import the users from the USERS_HASHED.json file to log-in with the following 5 combinations:
+Alternatively, you can import the users from the USERS_HASHED.json file directly into the database using Mongoose to log-in with the following 5 combinations:
 1) User 1:
-  * judilee
-  * testPassword1
+   * judilee
+   * testPassword1
     
 2) User 2:
    * jerome
@@ -43,3 +43,5 @@ Alternatively, you can import the users from the USERS_HASHED.json file to log-i
 5) User 5:
    * username5
    * testPassword5
+  
+You can also import NOTIFS.json and TASKS.json to get an idea of how notifications and tasks look in the website.
