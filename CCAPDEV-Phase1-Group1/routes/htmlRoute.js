@@ -6,6 +6,11 @@ router.use(express.json());
 router.use(express.urlencoded({extended:false}))
 
 // for INDEX.html 
+router.get('/',  (req,res) => {
+    const indexPath = path.join(__dirname, '../', 'index.html');
+    res.sendFile(indexPath);
+})
+
 router.get('/index.html',  (req,res) => {
     const indexPath = path.join(__dirname, '../', 'index.html');
     res.sendFile(indexPath);
