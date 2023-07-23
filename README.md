@@ -10,12 +10,12 @@ Ensure that the following are installed on your system:
 
 ## Getting Started
 1. Clone the repository / Download the file locally
-   Use 'git clone https://github.com/hcris2/CCAPDEV-PHASE1-GROUP1-NEW' or download as a ZIP file.
+   - Use 'git clone https://github.com/hcris2/CCAPDEV-PHASE1-GROUP1-NEW' or download as a ZIP file.
 
 2. Navigate to the directory of app.js in your terminal
-3. 
-4. Start the server
+   
+3. Start the server
    Run 'node app.js'
    
-5. Visit the website
+4. Visit the website
    Enter 'http://localhost:3000/' to visit the website.
