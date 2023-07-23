@@ -110,6 +110,47 @@ $(document).ready(async function() {
   });
 });
 
+//-------------------------------------------------------EDIT ZONE----------------------------------------------------------------------
+// Function to handle the search form submission
+$('#search_form').on('submit', async function(event) {
+  event.preventDefault();
+  const searchQuery = $('#search_input').val().toLowerCase();
+
+  try {
+    const response = await fetch('/api/tasks'); // Fetch tasks from the API
+    const tasks = await response.json();
+
+    const matchedTasks = tasks.filter(task =>
+      task.task_name.toLowerCase().includes(searchQuery)
+    );
+
+    let taskList = $('#task_list');
+    taskList.empty();
+
+    for (let task of matchedTasks) {
+      let div = $('<div></div>');
+      div.attr('id', `task_${task._id}`);
+      div.html(`
+        <h3>${task.task_name}</h3>
+        <p>Status: ${task.task_status}</p>
+        <p>Task Details: ${task.task_content}</p> <!-- Display actual data for "task_content" -->
+        <button>Edit</button>
+        <button>Delete</button>
+      `);
+
+      div.css('border-bottom', '1px solid rgb(214, 214, 214)');
+      div.css('padding-bottom', '10px');
+      div.css('border-radius', '5px');
+      taskList.append(div);
+    }
+  } catch (error) {
+    console.error('Error searching tasks:', error);
+  }
+});
+
+
+//-------------------------------------------------------EDIT ZONE----------------------------------------------------------------------
+
 $('#view_all_button').on('click', function() {
   $.ajax({
     type: 'GET',
