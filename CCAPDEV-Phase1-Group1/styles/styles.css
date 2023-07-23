@@ -30,6 +30,12 @@ body {
   align-items: center;
   font-family: 'Merriweather';
   font-size: 20px;
+  
+}
+
+.left_bar, .right_bar{
+  
+  transform: scale(0.8);
 }
 
 #task_div {
@@ -183,7 +189,11 @@ a:hover {
   width:auto;
   border-radius: 15px;
 }
-
+#notification_list{
+  max-width: 300px;
+  max-height: 700px;
+  overflow-y: scroll;
+}
 #notification_form input{
   margin-bottom: 10px;
 }
@@ -197,6 +207,7 @@ a:hover {
 }
 
 .notifications{
+  width:350px;
   margin-left:140px;
   border: 25px solid black;
   border-radius: 24px;
@@ -470,15 +481,13 @@ i{
 .nav_buttons li:hover::after {
     transform: scaleX(1);
 }
+
 .container{
     margin-left:130px;
-    margin-top: 50px;
     padding:30px;
-    display:flex;
-    overflow:auto;
-    justify-content: center;
-    align-items: center;
-    height:100%;
+    display: flex;
+    align-items: flex-start;
+    height: 100%; /* Ensure the container takes up full height */
    
 }
 #popupContainer {

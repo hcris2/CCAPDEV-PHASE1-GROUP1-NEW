@@ -233,7 +233,7 @@ async function viewTask(id) {
     popupContent.querySelector('.edit-button').addEventListener('click', editTaskOnClick);
 
     popupContent.querySelector('.close-button').addEventListener('click', function () {
-      closePopup();
+      closePopup1();
     });
 
     popupContainer.appendChild(popupContent);
@@ -250,7 +250,7 @@ function editTaskOnClick() {
   editTask(taskId);
 }
     
-  function closePopup() {
+  function closePopup1() {
     document.getElementById('taskPopupContainer').remove();
     document.body.classList.remove('popup-open');
   }
@@ -263,7 +263,7 @@ function editTaskOnClick() {
         return alert('Task not found');
       }
   
-      closePopup();
+      closePopup1();
       let editContainer = document.createElement('div');
       editContainer.id = 'editContainer';
       editContainer.innerHTML = `
@@ -449,10 +449,10 @@ async function deleteTask(id) {
   });
 
   document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('exit_button').addEventListener('click', closePopup);
+    document.getElementById('exit_button').addEventListener('click', closePopup1);
     document.addEventListener('click', function(event) {
       if (event.target === document.getElementById('popupContainer')) {
-        closePopup();
+        closePopup1();
       }
     });
 
@@ -535,7 +535,7 @@ async function updateCalendar() {
     deleteTask(taskId);
   });
 
-
+/*
   document.getElementById('add_category_button').addEventListener('click', async () => {
     if (newCategory !== null && newCategory.trim() !== '') {
       try {
@@ -643,8 +643,7 @@ async function deleteCategory(categoryId) {
       console.error('Error deleting category:', error);
     }
   }
-}
-
+}*/
   
 
 
@@ -795,7 +794,7 @@ async function deleteNotification(id) {
 }
 
   showTasks();
-  showCategories();
+  //showCategories();
   showNotifications();
   updateCalendar();
   updateCalendarOnAction();

@@ -35,7 +35,6 @@ $(document).ready(function() {
     event.preventDefault();
     const username = $('#login_username').val();
     const password = $('#login_password').val();
-
     // Send a POST request to the server for login
     fetch('/api/login', {
       method: 'POST',

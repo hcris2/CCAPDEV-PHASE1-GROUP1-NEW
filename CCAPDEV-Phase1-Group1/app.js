@@ -16,47 +16,46 @@ const Task = require('./models/Task.js');
 const Notif = require('./models/Notif.js');
 const Categ = require('./models/Categ.js');
 
-
-
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
 // adding a user, for registering;
 app.post('/api/users', async (req, res) => {
-    try {
-      const { username, password } = req.body;
-  
-      // Check if the username already exists
-      const existingUser = await User.findOne({ username });
-      if (existingUser) {
-        return res.status(409).json({ error: 'Username already exists. Please choose a different username.' });
-      }
-  
-      const newUser = new User({ username, password });
-      await newUser.save();
-      res.json(newUser);
-    } catch (error) {
-      res.status(500).json({ error: 'An error occurred during user registration' });
+  try {
+    const { username, password } = req.body;
+
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(409).json({ error: 'Username already exists. Please choose a different username.' });
     }
-  });
+
+    const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+    const newUser = new User({ username, password: hashedPassword });
+    
+    await newUser.save();
+    res.json(newUser);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred during user registration' });
+  }
+});
+
 
   // for logging in
-app.post('/api/login', async (req, res) => {
-
-   try{
-    const check = await User.collection.findOne({username:req.body.username})
-    if(check.password ===req.body.password){
-      res.render("plan.html");
+  app.post('/api/login', async (req, res) => {
+    try{
+     const user = await User.findOne({username:req.body.username})
+     if(!user){
+         return res.status(400).send("Invalid username");
+     }
+     const validPass = await bcrypt.compare(req.body.password, user.password);
+     if(!validPass) return res.status(400).send("Invalid password");
+ 
+     res.send("Logged in!");
+    } catch {
+     res.status(500).send("Something went wrong");
     }
-    else{
-      res.send("Invalid Credentials");
-    }
-   }catch{
-    res.send("Wrong details");
-
-
-   }
-});
+ });
+ 
 
 
 // for loading tasks

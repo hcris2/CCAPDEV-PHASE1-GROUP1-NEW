@@ -28,26 +28,28 @@
         <p>Welcome Back!</p>
         <form id="login_form"action="/api/login" method="POST">
           <div class="field-wrap">
-            <input type="text" id="login_username" placeholder="Username" required>
+            <input type="text" id="login_username" name="username" placeholder="Username" required>
           </div>
           <div class="field-wrap">
-            <input type="password" id="login_password" placeholder="Password" required>
+            <input type="password" id="login_password" name="password" placeholder="Password" required>
           </div>
           <button type="submit" class="button-block">Log In</button>
         </form>
+        
       </div>
 
       <div id="signup">
         <p>Register</p>
         <form id="signup_form" action="/api/users" method="POST">
           <div class="field-wrap">
-            <input type="text" id="signup_username" placeholder="Username" required>
+            <input type="text" id="signup_username" name="username" placeholder="Username" required>
           </div>
           <div class="field-wrap">
-            <input type="password" id="signup_password" placeholder="Password" required>
+            <input type="password" id="signup_password" name="password" placeholder="Password" required>
           </div>
           <button type="submit" class="button-block">Sign Up</button>
         </form>
+        
       </div>      
     </div>
   </div>
