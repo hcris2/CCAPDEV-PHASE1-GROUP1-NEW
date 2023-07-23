@@ -1,5 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const Task = require('../models/Task.js');
+
+router.use(express.json());
+router.use(express.urlencoded({extended:false}))
 
 // for loading tasks
 router.get('/', async (req, res) => {
@@ -50,22 +54,23 @@ router.get('/:id', async (req, res) => {
   
   // for updating tasks
   // PUT route to update a task by id
-router.patch('/:id', async (req, res) => {
+  router.patch('/:id', async (req, res) => {
     const taskId = req.params.id;
     const updatedTaskData = req.body;
-  
+
     try {
       // Find the task by id and update it in the database
       const updatedTask = await Task.findByIdAndUpdate(taskId, updatedTaskData, {
         new: true, // Return the updated task
       });
-  
+
       res.json(updatedTask);
     } catch (error) {
       console.error('Error updating task:', error);
       res.status(500).json({ error: 'An error occurred while updating the task' });
     }
-  });
+});
+
   
   //for deleting tasks
 router.delete('/:id', async (req, res) => {
@@ -83,3 +88,4 @@ router.delete('/:id', async (req, res) => {
    });
 
 module.exports = router;
+  

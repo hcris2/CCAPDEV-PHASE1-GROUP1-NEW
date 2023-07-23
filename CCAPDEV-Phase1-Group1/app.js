@@ -2,27 +2,23 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const bcrypt = require("bcryptjs");
-
-/* -------------------------------------------------------------------------------------- */
 const app = express()
 const router = express.Router();
 
+app.use(express.json())
+app.use(express.urlencoded({extended:false}))
 
 mongoose.connect('mongodb://127.0.0.1/MCO1db')
     .then(() => console.log('Connected to DB'))
 
 const User = require('./models/User.js')
-const Task = require('./models/Task.js');
-const Notif = require('./models/Notif.js');
 const Categ = require('./models/Categ.js');
 
-const taskRouter = require('./routes/task_route.js');
-const notifRouter = require('./routes/notif_route.js');
-app.use('/api/task', taskRouter);
-app.use('/api/notif', notifRouter);
+const taskRoute = require('./routes/taskRoute.js');
+const notifRoute = require('./routes/notifRoute.js');
+app.use('/api/tasks', taskRoute);
+app.use('/api/notifications', notifRoute);
 
-app.use(express.json())
-app.use(express.urlencoded({extended:false}))
 
 // adding a user, for registering;
 app.post('/api/users', async (req, res) => {
@@ -46,7 +42,7 @@ app.post('/api/users', async (req, res) => {
 
 
   // for logging in
-app.post('/api/login', async (req, res) => {
+  app.post('/api/login', async (req, res) => {
     try{
      const user = await User.findOne({username:req.body.username})
      if(!user){
@@ -61,6 +57,25 @@ app.post('/api/login', async (req, res) => {
     }
  });
  
+// Inside the server-side POST endpoint for task creation
+app.post('/api/plans', async (req, res) => {
+  try {
+    const { task_name, task_details, task_due_date, task_priority, task_category } = req.body;
+    const task = new Plan({ task_name, task_details, task_due_date, task_priority, task_category });
+    const validationErrors = task.validateSync(); // Validate the task object
+    
+    if (validationErrors) {
+      const errors = Object.values(validationErrors.errors).map((err) => err.message);
+      return res.status(400).json({ errors });
+      
+    }
+    await task.save();
+    res.status(201).json(task);
+  } catch (error) {
+    console.error('An error occurred while adding the task:', error);
+    res.status(500).json({ error: 'An error occurred while adding the task' });
+  }
+});
 
 app.get('/api/view', async (req, res) => {
   try {
@@ -158,6 +173,9 @@ app.delete('/api/categories/:categoryId', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+
+
 
 /* -------------------------------------------------------------------------------------- */
 app.get('/',  (req,res) => {

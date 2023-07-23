@@ -311,7 +311,7 @@ function convertToDateWorded(dateValue) {
 
   return dateWorded;
 }
-
+/*
 var dateInput = document.getElementById('dateInput');
 var dateWorded = document.getElementById('dateWorded');
 
@@ -319,4 +319,4 @@ dateInput.addEventListener('change', function() {
   var inputValue = dateInput.value;
   var wordedDate = convertToDateWorded(inputValue);
   dateWorded.textContent = wordedDate;
-});
+}); */
