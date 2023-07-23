@@ -44,4 +44,4 @@ Alternatively, you can import the users from the USERS_HASHED.json file directly
    * username5
    * testPassword5
   
-You can also import NOTIFS.json and TASKS.json to get an idea of how notifications and tasks look in the website.
+You can also import **NOTIFS.json** and **TASKS.json** to get an idea of how notifications and tasks look in the website.
