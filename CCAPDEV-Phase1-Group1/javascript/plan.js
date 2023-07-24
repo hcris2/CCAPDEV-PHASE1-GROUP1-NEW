@@ -93,7 +93,6 @@ $(document).ready(async function() {
     });
   });
 
-//-------------------------------------------------------EDIT ZONE----------------------------------------------------------------------
 // Function to handle the search form submission
 $('#search_form').on('submit', async function(event) {
   event.preventDefault();
@@ -131,8 +130,6 @@ $('#search_form').on('submit', async function(event) {
   }
 });
 
-
-//-------------------------------------------------------EDIT ZONE----------------------------------------------------------------------
 
 $('#view_all_button').on('click', function() {
   $.ajax({
@@ -559,116 +556,6 @@ async function updateCalendar() {
     deleteTask(taskId);
   });
 
-/*
-  document.getElementById('add_category_button').addEventListener('click', async () => {
-    if (newCategory !== null && newCategory.trim() !== '') {
-      try {
-        const response = await fetch('/api/categories', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ name: newCategory }),
-        });
-  
-        if (response.ok) {
-        } else {
-          console.error('Failed to add category:', response.status, response.statusText);
-        }
-      } catch (error) {
-        console.error('Error adding category:', error);
-      }
-    }
-  });
-  
-// Function to fetch and display all categories
-async function showCategories() {
-  let categoryList = $('#category_list');
-  categoryList.empty();
-
-  try {
-    const response = await fetch('/api/categories'); // Fetch categories from the API
-    const categories = await response.json();
-
-    for (let category of categories) {
-      let div = $('<div></div>');
-      div.attr('id', `category_${category._id}`);
-      div.html(`
-        <h3>${category.title}</h3>
-        <button class="edit-button" data-category-id="${category._id}">Edit</button>
-        <button class="delete-button" data-category-id="${category._id}">Delete</button>
-      `);
-
-      div.css('border-bottom', '1px solid rgb(214, 214, 214)');
-      div.css('padding-bottom', '10px');
-      div.css('border-radius', '5px');
-      categoryList.append(div);
-    }
-
-    categoryList.off('click', '.edit-button')
-    // Add event listeners for edit and delete buttons
-    categoryList.on('click', '.edit-button', function (event) {
-      event.stopPropagation();
-      let categoryId = $(this).attr('data-category-id');
-      editCategory(categoryId);
-    });
-    
-    categoryList.off('click', '.delete-button')
-    categoryList.on('click', '.delete-button', function (event) {
-      event.stopPropagation();
-      let categoryId = $(this).attr('data-category-id');
-      deleteCategory(categoryId);
-    });
-  } catch (error) {
-    console.error('Error fetching categories:', error);
-  }
-}
-
-// Function to edit a category
-async function editCategory(categoryId) {
-  let categoryElement = $(`#category_${categoryId} h3`);
-  let newCategoryName = prompt('Enter a new name for the category:', categoryElement.text());
-
-  if (newCategoryName !== null && newCategoryName.trim() !== '') {
-    try {
-      const response = await fetch(`/api/categories/${categoryId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name: newCategoryName }),
-      });
-
-      if (response.ok) {
-        categoryElement.text(newCategoryName);
-      } else {
-        console.error('Failed to update category:', response.status, response.statusText);
-      }
-    } catch (error) {
-      console.error('Error updating category:', error);
-    }
-  }
-}
-  
-// Function to delete a category
-async function deleteCategory(categoryId) {
-  if (confirm(`Are you sure you want to delete this category?`)) {
-    try {
-      const response = await fetch(`/api/categories/${categoryId}`, {
-        method: 'DELETE',
-      });
-
-      if (response.ok) {
-        $(`#category_${categoryId}`).remove();
-      } else {
-        console.error('Error deleting category:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Error deleting category:', error);
-    }
-  }
-}*/
-  
 
 
   async function showNotifications() {

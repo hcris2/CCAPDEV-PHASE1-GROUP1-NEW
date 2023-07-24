@@ -117,11 +117,6 @@ function addTaskEntry() {
    .then((response) => response.json())
    .then((data) => {
     //TODO: look into this comment more
-     // The task has been added to the database successfully
-     // You can update the newTaskEntry's content with the returned data, if necessary.
-     // For example, you can update the task ID or other properties that might have been generated on the server.
-     // You can access the returned data from the server in the 'data' variable.
-     // Update the newTaskEntry's content if needed based on the response data.
      newTaskEntry.setAttribute('data-task-id', data._id);
    })
    .catch((error) => {
