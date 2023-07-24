@@ -42,3 +42,9 @@ Alternatively, you can import the users from the USERS_HASHED.json file directly
 
   
 You can also import **NOTIFS.json** and **TASKS.json** to get an idea of how notifications and tasks look in the website.
+
+## Future Features
+The group will implement the following features in the future
+- Users only seeing tasks that they inputted instead of seeing all tasks in the database
+- Session Management
+- ... and other features deemed necessary
