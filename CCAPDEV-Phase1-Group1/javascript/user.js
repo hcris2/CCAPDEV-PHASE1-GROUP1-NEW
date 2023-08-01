@@ -43,10 +43,11 @@ $(document).ready(function() {
       },
       body: JSON.stringify({ username, password }),
     })
-      .then(response => {
-        if (response.ok) {
+      .then(response => response.json())
+      .then(data => {
+        if (data.message === 'Logged in!') {
           alert('Login successful');
-          localStorage.setItem('loggedIn', 'true'); // Set a flag to indicate the user is logged in
+          setCookie('accessToken', data.token, 1); // Token expires in 1 day
           window.location.href = 'plan.html'; // Redirect to plan.html after successful login
         } else {
           alert('Invalid login credentials');
@@ -58,20 +59,11 @@ $(document).ready(function() {
       });
   });
 
-  $('.tab a').on('click', function(e) {
-    e.preventDefault();
-    const target = $(this).attr('href');
-    const loggedIn = localStorage.getItem('loggedIn');
+  // ...
 
-    if (target === '#plan' && !loggedIn) {
-      alert('Please log in or sign up to access the Plan tab.');
-    } else {
-      $('.tab.active').removeClass('active');
-      $(this).parent().addClass('active');
-
-      $('.tab-content > div').hide();
-      $(target).fadeIn(600);
-    }
-  });
-
+  // Check if the user is already logged in using cookies
+  const accessToken = getCookie('accessToken');
+  if (accessToken) {
+    window.location.href = 'plan.html'; // Redirect to plan.html if already logged in
+  }
 });
