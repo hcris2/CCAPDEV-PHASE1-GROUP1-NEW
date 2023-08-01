@@ -58,15 +58,15 @@
   <script src="https://kit.fontawesome.com/e0c28b56a4.js" crossorigin="anonymous"></script>
   <script src="javascript/user.js"></script>
   <script>
-    function redirectToTaskPage() {
-      const isLoggedIn = localStorage.getItem('loggedIn');
-
-      if (isLoggedIn === 'true') {
-        window.location.href = 'plan.html';
-      } else {
-        alert('Please register and log in to access the task page.');
-      }
-    }
+    async function redirectToTaskPage() {
+          const response = await fetch('/api/is-authenticated');
+          const data = await response.json();
+          if (data.authenticated) {
+            window.location.href = 'task_page.html';
+          } else {
+            alert('Please register and log in to access the task page.');
+          }
+        }
   </script>
 </body>
 </html>

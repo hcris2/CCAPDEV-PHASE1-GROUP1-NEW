@@ -85,30 +85,32 @@
     </div>
     
     <script>
-        function logout() {
-            localStorage.removeItem('loggedIn');
-            window.location.href = 'index.html';
-        }
-
-        function checkAuthentication() {
-            const isLoggedIn = localStorage.getItem('loggedIn');
-
-            if (isLoggedIn !== 'true') {
-                alert('Please log in to access the plan page.');
-                window.location.href = 'index.html';
+        async function logout() {
+      const response = await fetch('/api/logout');
+      if(response.redirected){
+          window.location.href = response.url;
+      }
+  }
+  
+      async function checkAuthentication() {
+            const response = await fetch('/api/is-authenticated');
+            const data = await response.json();
+            if (!data.authenticated) {
+              alert('Please log in to access the other pages.');
+              window.location.href = 'index.html';
             }
-        }
-
-        function redirectToTaskPage() {
-            const isLoggedIn = localStorage.getItem('loggedIn');
-
-            if (isLoggedIn === 'true') {
-                window.location.href = 'plan.html';
+          }
+  
+      async function redirectToTaskPage() {
+            const response = await fetch('/api/is-authenticated');
+            const data = await response.json();
+            if (data.authenticated) {
+              window.location.href = 'plan.html';
             } else {
-                alert('Please register and log in to access the task page.');
+              alert('Please register and log in to access the task page.');
             }
-        }
-    </script>
+          }
+  </script>
     
     <script src="javascript/task_page.js"></script>
 </body>

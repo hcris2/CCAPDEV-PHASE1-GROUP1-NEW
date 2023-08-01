@@ -2,7 +2,9 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const bcrypt = require("bcryptjs");
+const session = require('express-session');
 const app = express()
+const dotenv = require('dotenv');
 const router = express.Router();
 
 app.use(express.json())
@@ -10,6 +12,14 @@ app.use(express.urlencoded({extended:false}))
 
 mongoose.connect('mongodb://127.0.0.1/MCO1db')
     .then(() => console.log('Connected to DB'))
+
+dotenv.config();
+app.use(session({
+      secret: 'process.env.SESSION_SECRET',
+      resave: false,
+      saveUninitialized: false,
+      cookie: { maxAge: 60000 } // 1 minute
+    }));
 
 const User = require('./models/User.js')
 
@@ -52,16 +62,38 @@ app.post('/api/login', async (req, res) => {
     try{
      const user = await User.findOne({username:req.body.username})
      if(!user){
-         return res.status(400).send("Invalid username");
+         return res.status(400).json({error: "Invalid username"});
      }
      const validPass = await bcrypt.compare(req.body.password, user.password);
-     if(!validPass) return res.status(400).send("Invalid password");
+     if(!validPass) return res.status(400).json({error: "Invalid password"});
  
-     res.send("Logged in!");
+     req.session.user = user;
+     res.json({message: "Logged in!"});
     } catch {
-     res.status(500).send("Something went wrong");
+     res.status(500).json({error: "Something went wrong"});
     }
  });
+
+ app.get('/api/is-authenticated', (req, res) => {
+  if (req.session && req.session.user) {
+    res.send({ authenticated: true });
+  } else {
+    res.send({ authenticated: false });
+  }
+});
+
+
+app.get('/api/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      return res.redirect('/api/home');
+    }
+    res.clearCookie('session.sid'); // Verify the name of the cookie
+    res.redirect('/');
+    console.log(req.session)
+  });
+});
+
  
 
 app.listen(3000, () => {

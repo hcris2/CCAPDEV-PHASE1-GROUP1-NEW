@@ -74,8 +74,4 @@ $(document).ready(function() {
     }
   });
 
-  // Check if the user is already logged in
-  if (localStorage.getItem('loggedIn') === 'true') {
-    window.location.href = 'plan.html'; // Redirect to plan.html if already logged in
-  }
 });
