@@ -18,6 +18,9 @@ $(document).ready(function() {
           alert('Registration successful');
           $('.tab.active').removeClass('active');
           $('#login').addClass('active'); // Switch to the "Log In" tab
+
+          // Set a cookie to indicate that the user is logged in
+          document.cookie = 'loggedIn=true; expires=Thu, 01 Jan 2030 00:00:00 UTC; path=/';
         } else {
           response.json().then(data => {
             alert(data.error);
@@ -29,9 +32,9 @@ $(document).ready(function() {
         alert('An error occurred during registration');
       });
   });
-
+  
   // User login logic
-  $('#login_form').on('submit', function(event) {
+  $('#login_form').on('submit', function (event) {
     event.preventDefault();
     const username = $('#login_username').val();
     const password = $('#login_password').val();
@@ -47,7 +50,6 @@ $(document).ready(function() {
       .then(data => {
         if (data.message === 'Logged in!') {
           alert('Login successful');
-          setCookie('accessToken', data.token, 1); // Token expires in 1 day
           window.location.href = 'plan.html'; // Redirect to plan.html after successful login
         } else {
           alert('Invalid login credentials');
@@ -58,12 +60,20 @@ $(document).ready(function() {
         alert('An error occurred during login');
       });
   });
-
-  // ...
-
-  // Check if the user is already logged in using cookies
-  const accessToken = getCookie('accessToken');
-  if (accessToken) {
-    window.location.href = 'plan.html'; // Redirect to plan.html if already logged in
-  }
+  
+  $('.tab a').on('click', function (e) {
+    e.preventDefault();
+    const target = $(this).attr('href');
+    const accessToken = Cookies.get('accessToken');
+  
+    if (target === '#plan' && !accessToken) {
+      alert('Please log in or sign up to access the Plan tab.');
+    } else {
+      $('.tab.active').removeClass('active');
+      $(this).parent().addClass('active');
+  
+      $('.tab-content > div').hide();
+      $(target).fadeIn(600);
+    }
+  });
 });

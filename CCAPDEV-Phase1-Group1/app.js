@@ -78,6 +78,7 @@ app.post('/api/users', async (req, res) => {
       res.status(500).send("Something went wrong");
     }
   });
+
   app.get('/api/is-authenticated', (req, res) => {
     if (req.session && req.session.user) {
       res.send({ authenticated: true, user: { username: req.session.user.username } });
@@ -86,17 +87,16 @@ app.post('/api/users', async (req, res) => {
     }
   });
 
-
-
-  app.get('/api/logout', (req, res) => {
-    req.session.destroy(err => {
-      if (err) {
-        return res.status(500).send("An error occurred during logout");
-      }
-      res.clearCookie('accessToken'); // Clear the session cookie
-      res.send({ message: "Logged out!" });
-    });
+app.get('/api/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      return res.status(500).send("An error occurred during logout");
+    }
+    res.clearCookie('connect.sid'); // Clear the session cookie
+    res.send({ message: "Logged out!" });
   });
+});
+
   
 
 app.listen(3000, () => {
