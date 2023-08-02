@@ -15,7 +15,7 @@ mongoose.connect('mongodb://127.0.0.1/MCO1db')
 
 dotenv.config();
 app.use(session({
-      secret: 'process.env.SESSION_SECRET',
+      secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
       cookie: { maxAge: 60000 } // 1 minute
