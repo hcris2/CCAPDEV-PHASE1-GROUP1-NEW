@@ -22,6 +22,65 @@ document.addEventListener('DOMContentLoaded', function() {
   
 });
 
+function deleteCookie(name) {
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
+function logout() {
+  // Remove the token from the cookie
+  deleteCookie('accessToken');
+  // Send a GET request to the server to clear the session
+  fetch('/api/logout')
+    .then(() => {
+      window.location.href = 'index.html'; // Redirect to index.html after successful logout
+    })
+    .catch(error => {
+      console.log(error);
+      alert('An error occurred during logout');
+    });
+}
+
+async function checkAuthentication() {
+  const response = await fetch('/api/is-authenticated');
+  const data = await response.json();
+  if (!data.authenticated) {
+    alert('Please log in to access the other pages.');
+    window.location.href = 'index.html';
+    return false;
+
+  }
+  return true;
+}
+
+async function redirectToPlanPage() {
+  const response = await fetch('/api/is-authenticated');
+  const data = await response.json();
+  if (data.authenticated) {
+    window.location.href = 'plan.html';
+
+  } else {
+    alert('Please register and log in to access the task page.');
+  }
+}
+
+
+  // Bind event listeners after function declarations
+  document.querySelector('#logout_button').addEventListener('click', function(event) {
+    event.preventDefault();
+    logout();
+  });
+
+  document.querySelector('.plan').addEventListener('click', function(event) {
+    event.preventDefault();
+    redirectToPlanPage();
+  });
+
+  document.querySelector('#tasks_button').addEventListener('click', function(event) {
+    event.preventDefault();
+    checkAuthentication();
+  });
+
+
 
 function updateTaskCounter() {
   var taskCount = document.querySelectorAll('.task_entry').length;
@@ -31,6 +90,11 @@ function updateTaskCounter() {
 
 // Function to load tasks from the server and display them
 async function loadTasks() {
+    // Check if user is authenticated
+    const isAuthenticated = await checkAuthentication();
+    if (!isAuthenticated) return;  // Return early if user is not authenticated
+
+    
   const taskList = document.getElementById('taskList');
 
   try {
@@ -63,7 +127,11 @@ async function loadTasks() {
   }
 }
 
-function addTaskEntry() {
+async function addTaskEntry() {
+  
+  const isAuthenticated = await checkAuthentication();
+  if (!isAuthenticated) return;
+
   var taskList = document.getElementById('taskList');
   var newTaskEntry = document.createElement('div');
   newTaskEntry.className = 'task_entry';
@@ -164,7 +232,10 @@ function displayTask(taskEntry) {
   
 }
 
-function deleteTaskEntry() {
+async function deleteTaskEntry() {
+  const isAuthenticated = await checkAuthentication();
+  if (!isAuthenticated) return;
+
   var selectedTaskEntry = document.querySelector('.task_entry.selected');
   
   if (selectedTaskEntry) {
@@ -210,7 +281,10 @@ function deleteTaskEntry() {
   }
 }
 
-function updateTaskEntry() {
+async function updateTaskEntry() {
+  const isAuthenticated = await checkAuthentication();
+  if (!isAuthenticated) return;
+
   var taskBoxName = document.querySelector('.task_box_name');
   var taskBoxContent = document.querySelector('.task_box_content');
   var taskBoxStatus = document.querySelector('#task_status_id').value;
