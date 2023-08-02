@@ -3,7 +3,6 @@ const path = require('path');
 const mongoose = require('mongoose');
 const bcrypt = require("bcryptjs");
 const session = require('express-session');
-const cookieParser = require('cookie-parser'); // Import the cookie-parser middleware
 const app = express()
 const dotenv = require('dotenv');
 const router = express.Router();
