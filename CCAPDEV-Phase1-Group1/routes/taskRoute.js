@@ -7,41 +7,45 @@ router.use(express.urlencoded({extended:false}))
 
 // for loading tasks
 router.get('/', async (req, res) => {
-    try {
-      const tasks = await Task.find();
-      res.status(200).json(tasks);
-    } catch (error) {
-      console.error('An error occurred while retrieving tasks:', error);
-      res.status(500).json({ error: 'An error occurred while retrieving tasks' });
-    }
-  });
+  if (!req.session.userId) {
+    return res.status(401).json({ error: 'User not authenticated' });
+  }
+
+  try {
+    const tasks = await Task.find({ user_id: req.session.userId }); // Change 'user' to 'user_id'
+    res.status(200).json(tasks);
+  } catch (error) {
+    console.error('An error occurred while retrieving tasks:', error);
+    res.status(500).json({ error: 'An error occurred while retrieving tasks' });
+  }
+});
+
+
   
   
 router.post('/', async (req, res) => {
-    try {
-      // Extract the task data from the request body
-      const { task_status, task_name, task_content, task_date, task_priority, task_category } = req.body;
-      
-  
-      // Create a new task document
-      const task = new Task({
-        task_status,
-        task_name,
-        task_content,
-        task_date,
-        task_priority,
-        task_category
-      });
-  
-      // Save the task to the database
-      await task.save();
-  
-      res.status(201).json(task); // Return the created task as the API response
-    } catch (error) {
-      console.error('An error occurred while adding the task:', error);
-      res.status(500).json({ error: 'An error occurred while adding the task' });
-    }
-  });
+  try {
+    const { task_status, task_name, task_content, task_date, task_priority, task_category } = req.body;
+
+    const task = new Task({
+      user_id: req.session.userId, // Change 'user' to 'user_id'
+      task_status,
+      task_name,
+      task_content,
+      task_date,
+      task_priority,
+      task_category
+    });
+
+    await task.save();
+    res.status(201).json(task); 
+  } catch (error) {
+    console.error('An error occurred while adding the task:', error);
+    res.status(500).json({ error: 'An error occurred while adding the task' });
+  }
+});
+
+
   // for displaying tasks
 router.get('/:id', async (req, res) => {
     try {

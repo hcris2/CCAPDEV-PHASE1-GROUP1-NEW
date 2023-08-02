@@ -3,6 +3,9 @@ const router = express.Router();
 const mongoose = require('mongoose');
 
 const taskSchema = new mongoose.Schema({
+  
+  user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Change 'user' to 'user_id'
+
   task_status: {
     type: String,
     required: true

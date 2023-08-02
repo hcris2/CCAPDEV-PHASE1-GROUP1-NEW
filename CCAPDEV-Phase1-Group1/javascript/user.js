@@ -19,8 +19,6 @@ $(document).ready(function() {
           $('.tab.active').removeClass('active');
           $('#login').addClass('active'); // Switch to the "Log In" tab
 
-          // Set a cookie to indicate that the user is logged in
-          document.cookie = 'loggedIn=true; expires=Thu, 01 Jan 2030 00:00:00 UTC; path=/';
         } else {
           response.json().then(data => {
             alert(data.error);

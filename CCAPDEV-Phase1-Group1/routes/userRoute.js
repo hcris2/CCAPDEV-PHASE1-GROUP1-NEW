@@ -34,20 +34,25 @@ router.post('/login', async (req, res) => {
       return res.status(400).send("Invalid password");
     }
   
-    req.session.user = user;
+    // Store only the userId in the session
+    req.session.userId = user._id;
     res.send({ message: "Logged in!", user: { username: user.username } });
   } catch (error) {
     res.status(500).send("Something went wrong");
   }
 });
 
-router.get('/is-authenticated', (req, res) => {
-  if (req.session && req.session.user) {
-    res.send({ authenticated: true, user: { username: req.session.user.username } });
+
+router.get('/is-authenticated', async (req, res) => {
+  if (req.session && req.session.userId) {
+    // If you need to send back the username or other user details, fetch the user from the database
+    const user = await User.findById(req.session.userId);
+    res.send({ authenticated: true, user: { username: user.username } });
   } else {
     res.send({ authenticated: false });
   }
 });
+
 
 router.get('/logout', (req, res) => {
   req.session.destroy(err => {
