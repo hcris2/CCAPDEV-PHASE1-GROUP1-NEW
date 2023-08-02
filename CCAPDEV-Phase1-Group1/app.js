@@ -23,6 +23,21 @@ app.use(session({
 
 const User = require('./models/User.js')
 
+// Add a middleware to set the user in the request object if the session has a user id
+app.use(async function (req, res, next) {
+    if (req.session && req.session.userId) {
+        try {
+            req.user = await User.findById(req.session.userId);
+            next();
+        } catch (error) {
+            next(error);
+        }
+    } else {
+        next();
+    }
+});
+
+
 const taskRoute = require('./routes/taskRoute.js');
 const notifRoute = require('./routes/notifRoute.js');
 const stylesRoute = require('./routes/stylesRoute.js');
