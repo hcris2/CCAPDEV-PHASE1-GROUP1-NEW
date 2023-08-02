@@ -61,19 +61,29 @@ $(document).ready(function() {
       });
   });
   
-  $('.tab a').on('click', function (e) {
+  $('.tab a').on('click', async function(e) {
     e.preventDefault();
     const target = $(this).attr('href');
-    const accessToken = Cookies.get('accessToken');
-  
-    if (target === '#plan' && !accessToken) {
-      alert('Please log in or sign up to access the Plan tab.');
-    } else {
-      $('.tab.active').removeClass('active');
-      $(this).parent().addClass('active');
-  
-      $('.tab-content > div').hide();
-      $(target).fadeIn(600);
+
+    try {
+      // Check if the user is authenticated
+      const response = await fetch('/api/is-authenticated');
+      const data = await response.json();
+      
+      if (target === '#plan' && !data.authenticated) {
+        alert('Please log in or sign up to access the Plan tab.');
+      } else {
+        $('.tab.active').removeClass('active');
+        $(this).parent().addClass('active');
+
+        $('.tab-content > div').hide();
+        $(target).fadeIn(600);
+      }
+    } catch (error) {
+      console.error(error);
+      alert('An error occurred while checking user authentication');
     }
   });
+
+
 });

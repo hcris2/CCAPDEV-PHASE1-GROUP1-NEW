@@ -92,7 +92,7 @@ app.get('/api/logout', (req, res) => {
     if (err) {
       return res.status(500).send("An error occurred during logout");
     }
-    res.clearCookie('connect.sid'); // Clear the session cookie
+    res.clearCookie('accessToken'); // Clear the session cookie
     res.send({ message: "Logged out!" });
   });
 });
