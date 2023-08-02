@@ -1,47 +1,196 @@
 [
     {
-        "user_id": "64ca2655328ed6a8b898b616",
-        "task_status": "In Progress",
-        "task_name": "First Task",
-        "task_content": "Example of an entry",
-        "task_date": "June 21, 2023",
-        "task_priority": "Low",
-        "task_category": "Personal"
+      "user_id": {
+        "$oid": "64bd339fff401c8e9ecb88b3" //username "judilee"
+      },
+      "task_status": "Not Started",
+      "task_name": "Jogging",
+      "task_content": "Jogging in the Morning",
+      "task_date": "2023-08-12",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
     },
+    
     {
-        "user_id": "64ca2655328ed6a8b898b616",
-        "task_status": "In Progress",
-        "task_name": "First Task",
-        "task_content": "Example of an entry",
-        "task_date": "June 21, 2023",
-        "task_priority": "Low",
-        "task_category": "Personal"
+      "user_id": {
+        "$oid": "64bd339fff401c8e9ecb88b3" //username "judilee"
+      },
+      "task_status": "Not Started",
+      "task_name": "Walking",
+      "task_content": "Walking in the morning",
+      "task_date": "2023-08-13",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
     },
+    
     {
-        "user_id": "64ca2655328ed6a8b898b616",
-        "task_status": "In Progress",
-        "task_name": "First Task",
-        "task_content": "Example of an entry",
-        "task_date": "June 21, 2023",
-        "task_priority": "Low",
-        "task_category": "Personal"
+      "user_id": {
+        "$oid": "64bd339fff401c8e9ecb88b3" //username "judilee"
+      },
+      "task_status": "Not Started",
+      "task_name": "Basketball",
+      "task_content": "Basketball in the morning",
+      "task_date": "2023-08-14",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
     },
+    
     {
-        "user_id": "64ca2655328ed6a8b898b616",
-        "task_status": "In Progress",
-        "task_name": "First Task",
-        "task_content": "Example of an entry",
-        "task_date": "June 21, 2023",
-        "task_priority": "Low",
-        "task_category": "Personal"
+      "user_id": {
+        "$oid": "64bd339fff401c8e9ecb88b4" //username "jerome"
+      },
+      "task_status": "Not Started",
+      "task_name": "Run",
+      "task_content": "Run in the evening",
+      "task_date": "2023-08-15",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
     },
+    
     {
-        "user_id": "64ca2655328ed6a8b898b616",
-        "task_status": "In Progress",
-        "task_name": "First Task",
-        "task_content": "Example of an entry",
-        "task_date": "June 21, 2023",
-        "task_priority": "Low",
-        "task_category": "Personal"
+      "user_id": {
+        "$oid": "64bd339fff401c8e9ecb88b4" //username "jerome"
+      },
+      "task_status": "Not Started",
+      "task_name": "Jump",
+      "task_content": "Jump in the evening",
+      "task_date": "2023-08-16",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
+    },
+      
+    {
+      "user_id": {
+        "$oid": "64bd339fff401c8e9ecb88b4" //username "jerome"
+      },
+      "task_status": "Not Started",
+      "task_name": "Jog in place",
+      "task_content": "Jog in place in the evening",
+      "task_date": "2023-08-17",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
+    },
+       
+    {
+      "user_id": {
+        "$oid": "64bd339fff401c8e9ecb88b5" //username "marc"
+      },
+      "task_status": "Not Started",
+      "task_name": "study",
+      "task_content": "study itprog",
+      "task_date": "2023-08-18",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
+    },
+    
+    {
+      "user_id": {
+        "$oid": "64bd339fff401c8e9ecb88b5" //username "marc"
+      },
+      "task_status": "Not Started",
+      "task_name": "exam",
+      "task_content": "exam in itnet",
+      "task_date": "2023-08-19",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
+    },
+    
+    {
+      "user_id": {
+        "$oid": "64bd339fff401c8e9ecb88b5" //username "marc"
+      },
+      "task_status": "Not Started",
+      "task_name": "MP",
+      "task_content": "MP in CCAPDEV",
+      "task_date": "2023-08-20",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
+    },
+     
+    {
+      "user_id": {
+        "$oid": "64bd339fff401c8e9ecb88b6" //username "username4"
+      },
+      "task_status": "Not Started",
+      "task_name": "play",
+      "task_content": "play LoL",
+      "task_date": "2023-08-21",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
+    },
+    
+    {
+      "user_id": {
+        "$oid": "64bd339fff401c8e9ecb88b6" //username "username4"
+      },
+      "task_status": "Not Started",
+      "task_name": "Buy",
+      "task_content": "Buy PS4",
+      "task_date": "2023-08-22",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
+    },
+    
+    {
+      "user_id": {
+        "$oid": "64bd339fff401c8e9ecb88b6" //username "username4"
+      },
+      "task_status": "Not Started",
+      "task_name": "Sell",
+      "task_content": "Sell PS4",
+      "task_date": "2023-08-23",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
+    },
+    
+    {
+      "user_id": {
+        "$oid": "64bd339fff401c8e9ecb88b7" //username "username5"
+      },
+      "task_status": "Not Started",
+      "task_name": "Finish Term 3",
+      "task_content": "Pass all subjects",
+      "task_date": "2023-08-24",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
+    },
+    
+    {
+      "user_id": {
+        "$oid": "64bd339fff401c8e9ecb88b7" //username "username5"
+      },
+      "task_status": "Not Started",
+      "task_name": "Download games",
+      "task_content": "Play NBA",
+      "task_date": "2023-08-25",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
+    },
+    
+    {
+      "user_id": {
+        "$oid": "64bd339fff401c8e9ecb88b7" //username "username5"
+      },
+      "task_status": "Not Started",
+      "task_name": "play NBA",
+      "task_content": "Win the game",
+      "task_date": "2023-08-26",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
     }
-]
+    ]
