@@ -1,20 +1,44 @@
-document.getElementById('plan').addEventListener('click', function(e) {
-    e.preventDefault(); // prevent the default action
+document.addEventListener('DOMContentLoaded', function() {
   
-    // Send a GET request to the server to check if the user is authenticated
-    fetch('/api/is-authenticated')
-      .then(response => response.json())
-      .then(data => {
-        if (data.authenticated) {
-          // If user is authenticated, redirect them to the plan page
-          window.location.href = 'plan.html';
-        } else {
-          // If user is not authenticated, redirect them to the login page
-          window.location.href = 'login.html';
-        }
-      })
-      .catch(error => {
-        console.log(error);
-        alert('An error occurred while checking authentication');
-      });
+  async function checkAuthentication() {
+    const response = await fetch('/user/is-authenticated');
+    const data = await response.json();
+    if (!data.authenticated) {
+      alert('Please log in to access the other pages.');
+      window.location.href = '/index.html';
+    }
+  }
+    
+    async function redirectToPlanPage() {
+      const response = await fetch('/user/is-authenticated');
+      const data = await response.json();
+      if (data.authenticated) {
+        window.location.href = 'plan.html';
+      } else {
+        alert('Please register and log in to access the plan page.');
+      }
+    }
+  
+    
+    async function redirectToTaskPage() {
+      const response = await fetch('/user/is-authenticated');
+      const data = await response.json();
+      if (data.authenticated) {
+        window.location.href = 'task_page.html';
+      } else {
+        alert('Please register and log in to access the task page.');
+      }
+    }
+    document.querySelector('.plan a').addEventListener('click', function(event) {
+      event.preventDefault();
+      redirectToPlanPage();
   });
+  
+  
+    document.querySelector('#tasks_button a').addEventListener('click', function(event){ 
+      event.preventDefault();
+      redirectToTaskPage();
+    })
+});
+
+

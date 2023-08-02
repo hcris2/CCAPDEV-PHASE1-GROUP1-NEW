@@ -7,7 +7,7 @@ router.use(express.urlencoded({extended:false}))
 
 
 router.get('/index.js',  (req,res) => {
-    const indexPath = path.join(__dirname, '../javascript', 'index.html');
+    const indexPath = path.join(__dirname, '../javascript', 'index.js');
     res.sendFile(indexPath);
 })
 

@@ -10,7 +10,7 @@ $(document).ready(async function() {
     // Remove the token from the cookie
     deleteCookie('accessToken');
     // Send a GET request to the server to clear the session
-    fetch('/api/logout')
+    fetch('/user/logout')
       .then(() => {
         window.location.href = 'index.html'; // Redirect to index.html after successful logout
       })
@@ -26,7 +26,7 @@ $(document).ready(async function() {
   });
 
   async function checkAuthentication() {
-  const response = await fetch('/api/is-authenticated');
+  const response = await fetch('/user/is-authenticated');
   const data = await response.json();
   if (!data.authenticated) {
     alert('Please log in to access the other pages.');
@@ -38,7 +38,7 @@ $(document).ready(async function() {
 }
 
   async function redirectToTaskPage() {
-    const response = await fetch('/api/is-authenticated');
+    const response = await fetch('/user/is-authenticated');
     const data = await response.json();
     if (data.authenticated) {
       window.location.href = 'task_page.html';
@@ -47,7 +47,7 @@ $(document).ready(async function() {
     }
   }
   async function redirectToPlanPage() {
-    const response = await fetch('/api/is-authenticated');
+    const response = await fetch('/user/is-authenticated');
     const data = await response.json();
     if (data.authenticated) {
       window.location.href = 'plan.html';
@@ -142,14 +142,14 @@ $(document).ready(async function() {
     event.preventDefault();
     closeEditContainer();
   });
-
+/*
   $('#logout_button').on('click', function(event) {
     event.preventDefault();
   
     // Make an HTTP request to the server to handle logout
     $.ajax({
       type: 'POST',
-      url: '/api/logout', // Use the new endpoint for logout
+      url: '/user/logout', // Use the new endpoint for logout
       success: function(response) {
         console.log('Logout successful:', response);
         window.location.href = 'index.html'; // Redirect to the homepage after logout
@@ -160,7 +160,7 @@ $(document).ready(async function() {
       }
     });
   });
-
+*/
 // Function to handle the search form submission
 $('#search_form').on('submit', async function(event) {
   event.preventDefault();

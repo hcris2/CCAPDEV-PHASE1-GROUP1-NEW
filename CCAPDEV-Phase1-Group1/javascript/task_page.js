@@ -1,4 +1,8 @@
-document.addEventListener('DOMContentLoaded', function() {
+$(document).ready(async function() {
+  
+  await checkAuthentication();
+
+  
   var addButton = document.querySelector('.add_task');
   addButton.addEventListener('click', addTaskEntry);
 
@@ -19,9 +23,25 @@ document.addEventListener('DOMContentLoaded', function() {
   
   loadTasks();
   updateTaskCounter();
-  
-});
 
+  
+  // Bind event listeners after function declarations
+  $('#logout_button').on('click', function(event) {
+    event.preventDefault();
+    logout();
+  });
+
+  $('.plan').on('click', function(event) {
+    event.preventDefault();
+    redirectToPlanPage();
+  });
+  
+  $('#tasks_button').on('click', function(event) {
+    event.preventDefault();
+    checkAuthentication();
+  });
+
+  
 function deleteCookie(name) {
   document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
@@ -30,7 +50,7 @@ function logout() {
   // Remove the token from the cookie
   deleteCookie('accessToken');
   // Send a GET request to the server to clear the session
-  fetch('/api/logout')
+  fetch('/user/logout')
     .then(() => {
       window.location.href = 'index.html'; // Redirect to index.html after successful logout
     })
@@ -41,7 +61,7 @@ function logout() {
 }
 
 async function checkAuthentication() {
-  const response = await fetch('/api/is-authenticated');
+  const response = await fetch('/user/is-authenticated');
   const data = await response.json();
   if (!data.authenticated) {
     alert('Please log in to access the other pages.');
@@ -53,7 +73,7 @@ async function checkAuthentication() {
 }
 
 async function redirectToPlanPage() {
-  const response = await fetch('/api/is-authenticated');
+  const response = await fetch('/user/is-authenticated');
   const data = await response.json();
   if (data.authenticated) {
     window.location.href = 'plan.html';
@@ -64,22 +84,7 @@ async function redirectToPlanPage() {
 }
 
 
-  // Bind event listeners after function declarations
-  document.querySelector('#logout_button').addEventListener('click', function(event) {
-    event.preventDefault();
-    logout();
-  });
-
-  document.querySelector('.plan').addEventListener('click', function(event) {
-    event.preventDefault();
-    redirectToPlanPage();
-  });
-
-  document.querySelector('#tasks_button').addEventListener('click', function(event) {
-    event.preventDefault();
-    checkAuthentication();
-  });
-
+  
 
 
 function updateTaskCounter() {
@@ -380,6 +385,10 @@ function convertToDateWorded(dateValue) {
 
   return dateWorded;
 }
+  
+
+});
+
 /*
 var dateInput = document.getElementById('dateInput');
 var dateWorded = document.getElementById('dateWorded');

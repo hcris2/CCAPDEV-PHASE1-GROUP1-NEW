@@ -10,19 +10,15 @@
 </head>
 
 <body>
-  
     <nav>
         <div class="logo"><a href="#" class="logo-link">TASKMASTER</a></div>
-
         <ul class="nav_buttons">
-            <a href="index.html"><li class="home"><i class="fa-solid fa-house fa-xs" aria-hidden="true" ></i> HOME</a></li>
-            <li class="plan"><a href="#" onclick="redirectToPlanPage()"><i class="fa-solid fa-calendar fa-xs"></i> PLAN</a></li>
-            <a href="#"  onclick="redirectToTaskPage()" ><li id="tasks_button"> <i class="fa-solid fa-list-check"></i> TASKS</li></a>
-            <li class="register"><a href="register.html#signup"> <i class="fa-solid fa-right-from-bracket"></i>REGISTER / LOG-IN</a></li>
+            <li class="home"><a href="index.html"><i class="fa-solid fa-house fa-xs" aria-hidden="true" ></i> HOME</a></li>
+            <li class="plan"><a><i class="fa-solid fa-calendar fa-xs"></i> PLAN</a></li>
+            <li id="tasks_button"><a><i class="fa-solid fa-list-check"></i> TASKS</a></li>
+            <li class="register"><a href="register.html#signup"><i class="fa-solid fa-right-from-bracket"></i> REGISTER / LOG-IN</a></li>
         </ul>
     </nav>
-
-  
     <div class="container">
         <br>
         <h1>Welcome to Taskmaster!</h1>
@@ -30,36 +26,7 @@
         <a href="register.html#signup"><button class="btn">REGISTER</button></a>
         <a href="register.html"><button class="btn">LOG-IN</button></a>
     </div>
-
-    <script>
-        async function checkAuthentication() {
-          const response = await fetch('/api/is-authenticated');
-          const data = await response.json();
-          if (!data.authenticated) {
-            alert('Please log in to access the other pages.');
-            window.location.href = 'index.html';
-          }
-        }
-      
-        async function redirectToPlanPage() {
-          const response = await fetch('/api/is-authenticated');
-          const data = await response.json();
-          if (data.authenticated) {
-            window.location.href = 'plan.html';
-          } else {
-            alert('Please register and log in to access the plan page.');
-          }
-        }
-      
-        async function redirectToTaskPage() {
-          const response = await fetch('/api/is-authenticated');
-          const data = await response.json();
-          if (data.authenticated) {
-            window.location.href = 'task_page.html';
-          } else {
-            alert('Please register and log in to access the task page.');
-          }
-        }
-      </script>
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="javascript/index.js"></script>
 </html>

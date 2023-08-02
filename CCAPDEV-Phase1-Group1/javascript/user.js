@@ -6,7 +6,7 @@ $(document).ready(function() {
     const password = $('#signup_password').val();
 
     // Send a POST request to the server for registration
-    fetch('/api/users', {
+    fetch('/user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ $(document).ready(function() {
     const username = $('#login_username').val();
     const password = $('#login_password').val();
     // Send a POST request to the server for login
-    fetch('/api/login', {
+    fetch('/user/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ $(document).ready(function() {
 
     try {
       // Check if the user is authenticated
-      const response = await fetch('/api/is-authenticated');
+      const response = await fetch('/user/is-authenticated');
       const data = await response.json();
       
       if (target === '#plan' && !data.authenticated) {
@@ -84,6 +84,23 @@ $(document).ready(function() {
       alert('An error occurred while checking user authentication');
     }
   });
+
+
+  $('.plan').on('click', function(event) {
+    event.preventDefault();
+    redirectToPlanPage();
+  });
+    
+  async function redirectToPlanPage() {
+    const response = await fetch('/user/is-authenticated');
+    const data = await response.json();
+    if (data.authenticated) {
+      window.location.href = 'plan.html';
+
+    } else {
+      alert('Please register and log in to access the task page.');
+    }
+  }
 
 
 });
