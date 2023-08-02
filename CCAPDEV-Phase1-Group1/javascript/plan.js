@@ -1,4 +1,72 @@
 $(document).ready(async function() {
+
+  await checkAuthentication();
+
+  function deleteCookie(name) {
+    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+  }
+
+  function logout() {
+    // Remove the token from the cookie
+    deleteCookie('accessToken');
+    // Send a GET request to the server to clear the session
+    fetch('/api/logout')
+      .then(() => {
+        window.location.href = 'index.html'; // Redirect to index.html after successful logout
+      })
+      .catch(error => {
+        console.log(error);
+        alert('An error occurred during logout');
+      });
+  }
+
+  $('#logout_button').on('click', function(event) {
+    event.preventDefault();
+    logout();
+  });
+
+  async function checkAuthentication() {
+  const response = await fetch('/api/is-authenticated');
+  const data = await response.json();
+  if (!data.authenticated) {
+    alert('Please log in to access the other pages.');
+    window.location.href = 'index.html';
+    return false;
+
+  }
+  return true;
+}
+
+  async function redirectToTaskPage() {
+    const response = await fetch('/api/is-authenticated');
+    const data = await response.json();
+    if (data.authenticated) {
+      window.location.href = 'task_page.html';
+    } else {
+      alert('Please register and log in to access the task page.');
+    }
+  }
+  async function redirectToPlanPage() {
+    const response = await fetch('/api/is-authenticated');
+    const data = await response.json();
+    if (data.authenticated) {
+      window.location.href = 'plan.html';
+  
+    } else {
+      alert('Please register and log in to access the task page.');
+    }
+  }
+
+  $('.plan').on('click', function(event) {
+    event.preventDefault();
+    redirectToPlanPage();
+  });
+
+  $('#tasks_button').on('click', function(event) {
+    event.preventDefault();
+    redirectToTaskPage();
+  });
+
   $('#task_form').on('submit', async function(event) {
     event.preventDefault();
 

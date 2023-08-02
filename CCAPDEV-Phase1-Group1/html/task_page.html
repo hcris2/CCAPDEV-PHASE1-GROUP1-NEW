@@ -13,9 +13,9 @@
         <a href="index.html"><div class="logo">TASKMASTER</div></a>
         <ul class="nav_buttons">
             <a href="index.html"><li class="home"><i class="fa-solid fa-house fa-xs"></i>  HOME</li></a>
-            <a href="#" onclick="checkAuthentication(); redirectToTaskPage()"><li class="plan"><i class="fa-solid fa-calendar fa-xs"></i>PLAN</li></a>
+            <a href="#"><li class="plan"><i class="fa-solid fa-calendar fa-xs"></i>PLAN</li></a>
             <a href="task_page.html"><li class="plan"><i class="fa-solid fa-list-check"></i> TASKS</li></a>
-            <a href="#" id="logout_button" onclick="logout()"><li id="logout_button"> <i class="fa-solid fa-right-from-bracket"></i>LOGOUT</li></a>
+            <a href="#" id="logout_button"><li id="logout_button"> <i class="fa-solid fa-right-from-bracket"></i>LOGOUT</li></a>
         </ul>
     </nav>
 
@@ -83,45 +83,6 @@
 
 
     </div>
-    
-    <script>
-     function deleteCookie(name) {
-  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-}
-function logout() {
-  // Remove the token from the cookie
-  deleteCookie('accessToken');
-  // Send a GET request to the server to clear the session
-  fetch('/api/logout')
-    .then(() => {
-      window.location.href = 'index.html'; // Redirect to index.html after successful logout
-    })
-    .catch(error => {
-      console.log(error);
-      alert('An error occurred during logout');
-    });
-}
-
-
-      async function checkAuthentication() {
-            const response = await fetch('/api/is-authenticated');
-            const data = await response.json();
-            if (!data.authenticated) {
-              alert('Please log in to access the other pages.');
-              window.location.href = 'index.html';
-            }
-          }
-  
-      async function redirectToTaskPage() {
-            const response = await fetch('/api/is-authenticated');
-            const data = await response.json();
-            if (data.authenticated) {
-              window.location.href = 'plan.html';
-            } else {
-              alert('Please register and log in to access the task page.');
-            }
-          }
-  </script>
     
     <script src="javascript/task_page.js"></script>
 </body>
