@@ -38,7 +38,7 @@ $(document).ready(async function() {
   
   $('#tasks_button').on('click', function(event) {
     event.preventDefault();
-    checkAuthentication();
+    redirectToTaskPage();
   });
 
   
@@ -78,6 +78,17 @@ async function redirectToPlanPage() {
   if (data.authenticated) {
     window.location.href = 'plan.html';
 
+  } else {
+    alert('Please register and log in to access the task page.');
+  }
+}
+
+
+async function redirectToTaskPage() {
+  const response = await fetch('/user/is-authenticated');
+  const data = await response.json();
+  if (data.authenticated) {
+    window.location.href = 'task_page.html';
   } else {
     alert('Please register and log in to access the task page.');
   }
