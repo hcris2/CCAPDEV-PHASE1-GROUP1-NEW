@@ -33,17 +33,19 @@ router.get('/about.css', (req, res) => {
     const cssPath = path.join(__dirname, '../styles', 'about.css');
     res.sendFile(cssPath);
 });
-router.get('/jerome.jpg', (req, res) => {
-    const bgPath = path.join(__dirname, '../styles', 'jerome.jpg');
-    res.sendFile(bgPath);
-});
 router.get('/judilee.jpg', (req, res) => {
-    const bgPath = path.join(__dirname, '../styles', 'judilee.jpg');
-    res.sendFile(bgPath);
+    const imagePath = path.join(__dirname, '../styles', 'judilee.jpg');
+    res.sendFile(imagePath);
 });
+
+router.get('/jerome.jpg', (req, res) => {
+    const imagePath = path.join(__dirname, '../styles', 'jerome.jpg');
+    res.sendFile(imagePath);
+});
+
 router.get('/marc.jpg', (req, res) => {
-    const bgPath = path.join(__dirname, '../styles', 'marc.jpg');
-    res.sendFile(bgPath);
+    const imagePath = path.join(__dirname, '../styles', 'marc.jpg');
+    res.sendFile(imagePath);
 });
 
 module.exports = router;
