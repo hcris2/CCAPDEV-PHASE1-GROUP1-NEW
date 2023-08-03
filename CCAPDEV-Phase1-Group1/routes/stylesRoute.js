@@ -34,15 +34,15 @@ router.get('/about.css', (req, res) => {
     res.sendFile(cssPath);
 });
 router.get('/jerome.jpg', (req, res) => {
-    const bgPath = path.join(__dirname, '../styles', 'bgtest.jpg');
+    const bgPath = path.join(__dirname, '../styles', 'jerome.jpg');
     res.sendFile(bgPath);
 });
 router.get('/judilee.jpg', (req, res) => {
-    const bgPath = path.join(__dirname, '../styles', 'bgtest.jpg');
+    const bgPath = path.join(__dirname, '../styles', 'judilee.jpg');
     res.sendFile(bgPath);
 });
 router.get('/marc.jpg', (req, res) => {
-    const bgPath = path.join(__dirname, '../styles', 'bgtest.jpg');
+    const bgPath = path.join(__dirname, '../styles', 'marc.jpg');
     res.sendFile(bgPath);
 });
 
