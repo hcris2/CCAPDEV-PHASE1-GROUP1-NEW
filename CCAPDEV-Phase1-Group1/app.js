@@ -10,10 +10,11 @@ const router = express.Router();
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
+dotenv.config();
+
 mongoose.connect(process.env.MONGODB_URL)
     .then(() => console.log('Connected to DB'))
 
-dotenv.config();
 app.use(session({
       secret: process.env.SESSION_SECRET,
       resave: false,
