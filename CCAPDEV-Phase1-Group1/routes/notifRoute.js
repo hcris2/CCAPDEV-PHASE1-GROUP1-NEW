@@ -7,9 +7,11 @@ router.use(express.urlencoded({extended:false}))
 
 
 
+// Fetch notifications based on userId
 router.get('/', async (req, res) => {
   try {
-    const notifications = await Notif.find();
+    const userId = req.query.userId; // Assuming userId is passed as a query parameter
+    const notifications = await Notif.find({ userId: userId });
     res.json(notifications);
   } catch (error) {
     console.error('Error fetching notifications:', error);
@@ -30,16 +32,15 @@ router.get('/:notificationId', async (req, res) => {
 
 });
 
-
-// Add a new notification
+// When creating a new notification, include userId
 router.post('/', async (req, res) => {
   try {
-    
-    const { title, body, date } = req.body;
+    const { title, body, date, userId } = req.body;
     const newNotification = new Notif({
       title,
       body,
       date,
+      userId
     });
 
     await newNotification.save();
