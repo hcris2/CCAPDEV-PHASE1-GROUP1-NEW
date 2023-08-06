@@ -10,6 +10,7 @@ const router = express.Router();
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
+
 dotenv.config();
 
 mongoose.connect(process.env.MONGODB_URL)
