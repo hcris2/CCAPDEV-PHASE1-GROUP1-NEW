@@ -293,7 +293,7 @@ async function deleteTaskEntry() {
       console.error('Error while deleting the task:', error);
     });
   } else {
-    console.error('No task selected to delete.');
+    alert('No task selected to delete.');
   }
 }
 
@@ -307,6 +307,19 @@ async function updateTaskEntry() {
   var taskBoxDate = document.querySelector('#task_due_date').value;
   var taskBoxPriority = document.querySelector('#task_priority_id').value;
   var taskBoxCategory = document.querySelector('#task_category_id').value;
+
+   // Check if fields are empty, and if so, return early without updating
+  if (
+    !taskBoxName.textContent.trim() || 
+    !taskBoxContent.textContent.trim() || 
+    !taskBoxStatus.trim() || 
+    !taskBoxDate.trim() || 
+    !taskBoxPriority.trim() || 
+    !taskBoxCategory.trim()
+  ) {
+    alert('All fields must be filled out to update the task.');
+    return;
+  }
 
   var selectedTaskEntry = document.querySelector('.task_entry.selected'); // Get the selected task entry
 
@@ -362,7 +375,7 @@ async function updateTaskEntry() {
       console.error('Error updating task:', error);
     });
   } else {
-    console.error('No task selected to update.');
+    alert('No task selected to update.');
   }
 }
 

@@ -123,6 +123,7 @@ $(document).ready(async function() {
   $('#notification_form').on('submit', async function(event) {
     event.preventDefault();
     
+    
     const notification = {
       title: document.getElementById('notification_title').value,
       body: document.getElementById('notification_body').value,
@@ -723,7 +724,16 @@ async function saveEditedNotification(id) {
     const notificationBody = document.getElementById('edit_notification_body').value;
     const notificationDate = document.getElementById('edit_notification_date').value;
 
-    if (!notificationDate) {
+    if (!notificationTitle){
+      alert("Please provide a title for the notification.");
+      return;
+    }
+
+    if (!notificationBody){
+      alert("Please provide a body for the notification.");
+      return;
+    }
+    if (!notificationDate)  {
       alert('Please provide a date for the notification.');
       return; // Exit the function
     }
