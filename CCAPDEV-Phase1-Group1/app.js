@@ -6,6 +6,8 @@ const session = require('express-session');
 const app = express()
 const dotenv = require('dotenv');
 const router = express.Router();
+const MemoryStore = require('memorystore')(session)
+
 
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
@@ -19,7 +21,10 @@ mongoose.connect(process.env.MONGODB_URL)
 app.use(session({
       secret: process.env.SESSION_SECRET,
       resave: false,
-      saveUninitialized: false,
+      saveUninitialized: false, 
+      store: new MemoryStore({
+        checkPeriod: 86400000 // prune expired entries every 24h
+      }),
       cookie: { maxAge: 1800000  } // 30 minutes
     }));
 
