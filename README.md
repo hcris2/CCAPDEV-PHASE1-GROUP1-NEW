@@ -26,12 +26,13 @@ Ensure that the following are installed on your system:
    ```
    
 5. Visit the website
-   - Enter http://localhost:3000/ to visit the website.
+   - Enter https://taskmaster-final-punc.onrender.com/
+   - or use http://localhost:3000/ if running locally
 
 ## Using the website
 You can register a username and password to log-in and access the Plan and Task pages.
 
-Alternatively, you can import the users from the USERS_HASHED.json file directly into the database using Mongoose to log-in with the following 5 combinations:
+Alternatively, you can use these combinations as sample users.
 | Username | Password |
 | --- | --- |
 | judilee | testPassword1 |
@@ -40,11 +41,11 @@ Alternatively, you can import the users from the USERS_HASHED.json file directly
 | username4 | testPassword4 |
 | username5 | testPassword5 |
 
-  
-You can also import **NOTIFS.json** and **TASKS.json** to get an idea of how notifications and tasks look in the website.
+These accounts come with sample tasks and notifications (found in sample_data) in the database to get an idea of how the website will look like.
 
-## Future Features
-The group will implement the following features in the future
-- Users only seeing tasks that they inputted instead of seeing all tasks in the database
-- Session Management
-- ... and other features deemed necessary
+## Plan Page
+
+## Task Page
+
+
+
