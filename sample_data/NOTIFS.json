@@ -1,32 +1,288 @@
 [
     {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946ae6"
+        },
         "title": "Attend seminar",
         "body": "Attend seminar on 10th of May",
-        "date": "2023-07-22T21:52:00.000+00:00"
+        "date": {
+            "$date": "2023-07-22T21:52:00.000Z"
+        },
+        "__v": 0
     },
-
     {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946ae6"
+        },
         "title": "Wake up early",
         "body": "Wake up early to study for exam",
-        "date": "2023-05-20T21:52:00.000+00:00"
+        "date": {
+            "$date": "2023-05-20T21:52:00.000Z"
+        },
+        "__v": 0
     },
-
     {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946ae6"
+        },
         "title": "Deadline for project",
         "body": "Fix the project before the deadline",
-        "date": "2023-08-20T21:52:00.000+00:00"
+        "date": {
+            "$date": "2023-08-20T21:52:00.000Z"
+        },
+        "__v": 0
     },
-
     {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946ae6"
+        },
         "title": "Edit the video",
         "body": "Edit the video when this is played",
-        "date": "2023-08-20T21:52:00.000+00:00"
+        "date": {
+            "$date": "2023-08-20T21:52:00.000Z"
+        },
+        "__v": 0
     },
-
     {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946ae6"
+        },
         "title": "Turn off the stove",
         "body": "Turn off cooking stove when this is played",
-        "date": "2023-08-20T21:52:00.000+00:00"
-    }
+        "date": {
+            "$date": "2023-08-20T21:52:00.000Z"
+        },
+        "__v": 0
+    },
 
+
+    {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946ae7"
+        },
+        "title": "Attend Class",
+        "body": "Attend Class",
+        "date": {
+            "$date": "2023-07-22T21:52:00.000Z"
+        },
+        "__v": 0
+    },
+    {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946ae7"
+        },
+        "title": "Wake up late",
+        "body": "Wake up late to study for exam",
+        "date": {
+            "$date": "2023-05-20T21:52:00.000Z"
+        },
+        "__v": 0
+    },
+    {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946ae7"
+        },
+        "title": "Deadline for quiz",
+        "body": "Fix the quiz before the deadline",
+        "date": {
+            "$date": "2023-08-20T21:52:00.000Z"
+        },
+        "__v": 0
+    },
+    {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946ae7"
+        },
+        "title": "Edit the picture",
+        "body": "Edit the picture when this is played",
+        "date": {
+            "$date": "2023-08-20T21:52:00.000Z"
+        },
+        "__v": 0
+    },
+    {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946ae7"
+        },
+        "title": "Turn on the stove",
+        "body": "Turn on cooking stove when this is played",
+        "date": {
+            "$date": "2023-08-20T21:52:00.000Z"
+        },
+        "__v": 0
+    },
+
+
+
+    {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946ae8"
+        },
+        "title": "Attend the thing",
+        "body": "Attend it",
+        "date": {
+            "$date": "2023-07-22T21:52:00.000Z"
+        },
+        "__v": 0
+    },
+    {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946ae8"
+        },
+        "title": "Wake up",
+        "body": "Wake up to study for exam",
+        "date": {
+            "$date": "2023-05-20T21:52:00.000Z"
+        },
+        "__v": 0
+    },
+    {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946ae8"
+        },
+        "title": "Deadline for homework",
+        "body": "Fix the homework before the deadline",
+        "date": {
+            "$date": "2023-08-20T21:52:00.000Z"
+        },
+        "__v": 0
+    },
+    {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946ae8"
+        },
+        "title": "Edit the essay",
+        "body": "Edit the essay when this is played",
+        "date": {
+            "$date": "2023-08-20T21:52:00.000Z"
+        },
+        "__v": 0
+    },
+    {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946ae8"
+        },
+        "title": "Turn on the computer",
+        "body": "Turn on computer",
+        "date": {
+            "$date": "2023-08-20T21:52:00.000Z"
+        },
+        "__v": 0
+    },
+
+
+    {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946ae9"
+        },
+        "title": "Attend",
+        "body": "Attend",
+        "date": {
+            "$date": "2023-07-22T21:52:00.000Z"
+        },
+        "__v": 0
+    },
+    {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946ae9"
+        },
+        "title": "Wake up",
+        "body": "Wake up",
+        "date": {
+            "$date": "2023-05-20T21:52:00.000Z"
+        },
+        "__v": 0
+    },
+    {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946ae9"
+        },
+        "title": "Deadline for project",
+        "body": "Fix the project before the deadline",
+        "date": {
+            "$date": "2023-08-20T21:52:00.000Z"
+        },
+        "__v": 0
+    },
+    {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946ae9"
+        },
+        "title": "Edit my task",
+        "body": "Edit the task when this is played",
+        "date": {
+            "$date": "2023-08-20T21:52:00.000Z"
+        },
+        "__v": 0
+    },
+    {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946ae9"
+        },
+        "title": "Turn off the speakers",
+        "body": "Turn off speakers when this is played",
+        "date": {
+            "$date": "2023-08-20T21:52:00.000Z"
+        },
+        "__v": 0
+    },
+
+
+
+
+    {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946aea"
+        },
+        "title": "Listen to music",
+        "body": "Listen to music",
+        "date": {
+            "$date": "2023-07-22T21:52:00.000Z"
+        },
+        "__v": 0
+    },
+    {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946aea"
+        },
+        "title": "charge phone",
+        "body": "Charge phone to full battery",
+        "date": {
+            "$date": "2023-05-20T21:52:00.000Z"
+        },
+        "__v": 0
+    },
+    {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946aea"
+        },
+        "title": "come up with something",
+        "body": "Figure it out before the deadline",
+        "date": {
+            "$date": "2023-08-20T21:52:00.000Z"
+        },
+        "__v": 0
+    },
+    {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946aea"
+        },
+        "title": "Edit the video",
+        "body": "Edit the video when this is played",
+        "date": {
+            "$date": "2023-08-20T21:52:00.000Z"
+        },
+        "__v": 0
+    },
+    {
+        "userId": {
+            "$oid": "64cfcd8cea55111632946aea"
+        },
+        "title": "Turn off the stove",
+        "body": "Turn off cooking stove when this is played",
+        "date": {
+            "$date": "2023-08-20T21:52:00.000Z"
+        },
+        "__v": 0
+    }
 ]

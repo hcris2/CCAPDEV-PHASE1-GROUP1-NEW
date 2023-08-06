@@ -1,7 +1,7 @@
 [
     {
       "user_id": {
-        "$oid": "64bd339fff401c8e9ecb88b3" //username "judilee"
+        "$oid": "64cfcd8cea55111632946ae6"
       },
       "task_status": "Not Started",
       "task_name": "Jogging",
@@ -14,7 +14,7 @@
     
     {
       "user_id": {
-        "$oid": "64bd339fff401c8e9ecb88b3" //username "judilee"
+        "$oid": "64cfcd8cea55111632946ae6" 
       },
       "task_status": "Not Started",
       "task_name": "Walking",
@@ -27,7 +27,7 @@
     
     {
       "user_id": {
-        "$oid": "64bd339fff401c8e9ecb88b3" //username "judilee"
+        "$oid": "64cfcd8cea55111632946ae6"
       },
       "task_status": "Not Started",
       "task_name": "Basketball",
@@ -37,14 +37,27 @@
       "task_category": "Personal",
       "__v": 0
     },
-    
+
     {
       "user_id": {
-        "$oid": "64bd339fff401c8e9ecb88b4" //username "jerome"
+        "$oid": "64cfcd8cea55111632946ae6"
       },
       "task_status": "Not Started",
-      "task_name": "Run",
-      "task_content": "Run in the evening",
+      "task_name": "Exercise",
+      "task_content": "Lift weights in the morning",
+      "task_date": "2023-08-14",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
+    },
+
+    {
+      "user_id": {
+        "$oid": "64cfcd8cea55111632946ae6"
+      },
+      "task_status": "Not Started",
+      "task_name": "rest",
+      "task_content": "get some sleep",
       "task_date": "2023-08-15",
       "task_priority": "Low",
       "task_category": "Personal",
@@ -53,7 +66,20 @@
     
     {
       "user_id": {
-        "$oid": "64bd339fff401c8e9ecb88b4" //username "jerome"
+        "$oid": "64cfcd8cea55111632946ae7" 
+      },
+      "task_status": "Not Started",
+      "task_name": "Run",
+      "task_content": "Run in the evening",
+      "task_date": "2023-08-16",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
+    },
+    
+    {
+      "user_id": {
+        "$oid": "64cfcd8cea55111632946ae7" 
       },
       "task_status": "Not Started",
       "task_name": "Jump",
@@ -66,12 +92,38 @@
       
     {
       "user_id": {
-        "$oid": "64bd339fff401c8e9ecb88b4" //username "jerome"
+        "$oid": "64cfcd8cea55111632946ae7" 
+      },
+      "task_status": "Not Started",
+      "task_name": "Walk",
+      "task_content": "Walk in place in the evening",
+      "task_date": "2023-08-18",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
+    },
+
+    {
+      "user_id": {
+        "$oid": "64cfcd8cea55111632946ae7" 
+      },
+      "task_status": "Not Started",
+      "task_name": "Treadmill",
+      "task_content": "Run 1000km in the evening",
+      "task_date": "2023-08-18",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
+    },
+
+    {
+      "user_id": {
+        "$oid": "64cfcd8cea55111632946ae7" 
       },
       "task_status": "Not Started",
       "task_name": "Jog in place",
       "task_content": "Jog in place in the evening",
-      "task_date": "2023-08-17",
+      "task_date": "2023-08-19",
       "task_priority": "Low",
       "task_category": "Personal",
       "__v": 0
@@ -79,7 +131,7 @@
        
     {
       "user_id": {
-        "$oid": "64bd339fff401c8e9ecb88b5" //username "marc"
+        "$oid": "64cfcd8cea55111632946ae8" 
       },
       "task_status": "Not Started",
       "task_name": "study",
@@ -92,7 +144,7 @@
     
     {
       "user_id": {
-        "$oid": "64bd339fff401c8e9ecb88b5" //username "marc"
+        "$oid": "64cfcd8cea55111632946ae8" 
       },
       "task_status": "Not Started",
       "task_name": "exam",
@@ -105,7 +157,7 @@
     
     {
       "user_id": {
-        "$oid": "64bd339fff401c8e9ecb88b5" //username "marc"
+        "$oid": "64cfcd8cea55111632946ae8"
       },
       "task_status": "Not Started",
       "task_name": "MP",
@@ -115,10 +167,36 @@
       "task_category": "Personal",
       "__v": 0
     },
+
+    {
+      "user_id": {
+        "$oid": "64cfcd8cea55111632946ae8"
+      },
+      "task_status": "Not Started",
+      "task_name": "Quiz",
+      "task_content": "Quiz in CCAPDEV",
+      "task_date": "2023-08-20",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
+    },
+
+    {
+      "user_id": {
+        "$oid": "64cfcd8cea55111632946ae8"
+      },
+      "task_status": "Not Started",
+      "task_name": "Practice",
+      "task_content": "Practice in CCAPDEV",
+      "task_date": "2023-08-21",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
+    },
      
     {
       "user_id": {
-        "$oid": "64bd339fff401c8e9ecb88b6" //username "username4"
+        "$oid": "64cfcd8cea55111632946ae9" 
       },
       "task_status": "Not Started",
       "task_name": "play",
@@ -131,7 +209,7 @@
     
     {
       "user_id": {
-        "$oid": "64bd339fff401c8e9ecb88b6" //username "username4"
+        "$oid": "64cfcd8cea55111632946ae9" 
       },
       "task_status": "Not Started",
       "task_name": "Buy",
@@ -144,7 +222,7 @@
     
     {
       "user_id": {
-        "$oid": "64bd339fff401c8e9ecb88b6" //username "username4"
+        "$oid": "64cfcd8cea55111632946ae9" 
       },
       "task_status": "Not Started",
       "task_name": "Sell",
@@ -157,7 +235,34 @@
     
     {
       "user_id": {
-        "$oid": "64bd339fff401c8e9ecb88b7" //username "username5"
+        "$oid": "64cfcd8cea55111632946ae9" 
+      },
+      "task_status": "Not Started",
+      "task_name": "Trade",
+      "task_content": "Trade PS4",
+      "task_date": "2023-08-25",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
+    },
+
+    {
+      "user_id": {
+        "$oid": "64cfcd8cea55111632946ae9" 
+      },
+      "task_status": "Not Started",
+      "task_name": "Switch",
+      "task_content": "Switch PS4",
+      "task_date": "2023-08-26",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
+    },
+
+
+    {
+      "user_id": {
+        "$oid": "64cfcd8cea55111632946aea" 
       },
       "task_status": "Not Started",
       "task_name": "Finish Term 3",
@@ -170,7 +275,7 @@
     
     {
       "user_id": {
-        "$oid": "64bd339fff401c8e9ecb88b7" //username "username5"
+        "$oid": "64cfcd8cea55111632946aea" 
       },
       "task_status": "Not Started",
       "task_name": "Download games",
@@ -180,10 +285,38 @@
       "task_category": "Personal",
       "__v": 0
     },
+
     
     {
       "user_id": {
-        "$oid": "64bd339fff401c8e9ecb88b7" //username "username5"
+        "$oid": "64cfcd8cea55111632946aea" 
+      },
+      "task_status": "Not Started",
+      "task_name": "Download games",
+      "task_content": "Play Dota",
+      "task_date": "2023-08-25",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
+    },
+
+    
+    {
+      "user_id": {
+        "$oid": "64cfcd8cea55111632946aea" 
+      },
+      "task_status": "Not Started",
+      "task_name": "Download games",
+      "task_content": "Play League of Legends",
+      "task_date": "2023-08-25",
+      "task_priority": "Low",
+      "task_category": "Personal",
+      "__v": 0
+    },
+    
+    {
+      "user_id": {
+        "$oid": "64cfcd8cea55111632946aea" 
       },
       "task_status": "Not Started",
       "task_name": "play NBA",
