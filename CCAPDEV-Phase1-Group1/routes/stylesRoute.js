@@ -29,5 +29,23 @@ router.get('/task_page_styles.css', (req, res) => {
     const cssPath = path.join(__dirname, '../styles', 'task_page_styles.css');
     res.sendFile(cssPath);
 });
+router.get('/about.css', (req, res) => {
+    const cssPath = path.join(__dirname, '../styles', 'about.css');
+    res.sendFile(cssPath);
+});
+router.get('/judilee.jpg', (req, res) => {
+    const imagePath = path.join(__dirname, '../styles', 'judilee.jpg');
+    res.sendFile(imagePath);
+});
+
+router.get('/jerome.jpg', (req, res) => {
+    const imagePath = path.join(__dirname, '../styles', 'jerome.jpg');
+    res.sendFile(imagePath);
+});
+
+router.get('/marc.jpg', (req, res) => {
+    const imagePath = path.join(__dirname, '../styles', 'marc.jpg');
+    res.sendFile(imagePath);
+});
 
 module.exports = router;

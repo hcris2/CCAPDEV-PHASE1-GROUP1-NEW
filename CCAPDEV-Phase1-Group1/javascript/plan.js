@@ -1,6 +1,20 @@
+let userId;
+
 $(document).ready(async function() {
 
   await checkAuthentication();
+  let userId; // Declare it outside the $(document).ready() function
+  try {
+    const response = await fetch('/user/id');
+    const data = await response.json();
+    if (data.userId) {
+        userId = data.userId;
+    } else {
+        console.error('Failed to get user ID:', data.message);
+    }
+} catch (error) {
+    console.error('Error fetching user ID:', error);
+}
 
   function deleteCookie(name) {
     document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
@@ -108,11 +122,13 @@ $(document).ready(async function() {
 
   $('#notification_form').on('submit', async function(event) {
     event.preventDefault();
-  
+    
+    
     const notification = {
       title: document.getElementById('notification_title').value,
       body: document.getElementById('notification_body').value,
       date: document.getElementById('notification_date').value,
+      userId: userId
     };
   
     try {
@@ -142,25 +158,7 @@ $(document).ready(async function() {
     event.preventDefault();
     closeEditContainer();
   });
-/*
-  $('#logout_button').on('click', function(event) {
-    event.preventDefault();
-  
-    // Make an HTTP request to the server to handle logout
-    $.ajax({
-      type: 'POST',
-      url: '/user/logout', // Use the new endpoint for logout
-      success: function(response) {
-        console.log('Logout successful:', response);
-        window.location.href = 'index.html'; // Redirect to the homepage after logout
-      },
-      error: function(error) {
-        console.error('Error during logout:', error);
-        // Handle any errors that may occur during logout
-      }
-    });
-  });
-*/
+
 // Function to handle the search form submission
 $('#search_form').on('submit', async function(event) {
   event.preventDefault();
@@ -244,7 +242,6 @@ async function showTasks() {
   try {
     const response = await fetch('/api/tasks'); // Fetch tasks from the API
     const tasks = await response.json();
-    console.log(tasks)
 
     let taskList = $('#task_list');
     taskList.empty();
@@ -555,7 +552,6 @@ async function updateCalendar() {
   try {
     const response = await fetch('/api/tasks'); // Fetch tasks from the API
     const tasks = await response.json();
-    console.log(tasks);
 
     let events = tasks.map(task => {
       return {
@@ -724,10 +720,28 @@ function closePopup() {
 
 async function saveEditedNotification(id) {
   try {
+    const notificationTitle = document.getElementById('edit_notification_title').value;
+    const notificationBody = document.getElementById('edit_notification_body').value;
+    const notificationDate = document.getElementById('edit_notification_date').value;
+
+    if (!notificationTitle){
+      alert("Please provide a title for the notification.");
+      return;
+    }
+
+    if (!notificationBody){
+      alert("Please provide a body for the notification.");
+      return;
+    }
+    if (!notificationDate)  {
+      alert('Please provide a date for the notification.');
+      return; // Exit the function
+    }
+
     const notification = {
-      title: document.getElementById('edit_notification_title').value,
-      body: document.getElementById('edit_notification_body').value,
-      date: document.getElementById('edit_notification_date').value,
+      title: notificationTitle,
+      body: notificationBody,
+      date: notificationDate,
     };
 
     const response = await fetch(`/api/notifications/${id}`, {
@@ -751,6 +765,7 @@ async function saveEditedNotification(id) {
     alert('An error occurred while updating the notification.');
   }
 }
+
 
 // Function to delete a notification
 async function deleteNotification(id) {

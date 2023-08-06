@@ -53,6 +53,14 @@ router.get('/is-authenticated', async (req, res) => {
   }
 });
 
+router.get('/id', async (req, res) => {
+  if (req.user) {
+    res.json({ userId: req.user._id }); // Assuming _id is the user id in your User model
+  } else {
+    res.status(401).json({ message: 'Not authenticated' });
+  }
+});
+
 
 router.get('/logout', (req, res) => {
   req.session.destroy(err => {
